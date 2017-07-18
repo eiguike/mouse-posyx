@@ -1,22 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+//#include <Windows.h>
 
-#define WINDOWS
+MOUSE * gMouse = NULL;
+
+enum OperatingSystem {
+  LINUX = 0,
+  WINDOWS
+};
 
 typedef struct {
   double x;
   double y;
-} MOUSE_POS;
+  void * this;
 
-typedef struct {
-  MOUSE_POS pos;
+  VOID * (*SetCursorPos)();
+  int (*GetCursorPos)(double x, double y);
 } MOUSE;
 
-MOUSE_POS GetMousePosition () {
-  MOUSE_POS ret;
-  return ret;
+void SetupMouse() {
+  gMouse = (MOUSE*)malloc(sizeof(MOUSE)*1);
+  gMouse->this = &gMouse;
+
+#ifdef LINUX
+  gMouse->SetCursorPos = 
+#elif WINDOWS
+  gMouse->SetCursorPos = 
+#endif
+
+  gMouse->GetCursorPos = GetCursorPos;
 }
 
+
 int main() {
-  printf("Hello world!\n");
+  SetupMouse ();
 }
