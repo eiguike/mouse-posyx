@@ -10,11 +10,16 @@ typedef struct {
   unsigned int Y;
 } POSITION;
 
+typedef Display DISPLAY;
+typedef Window WINDOW;
+
 typedef struct MOUSE_DEVICE {
+  // Mouse position
   POSITION Position;
 
-  Display * Disp;
-  Window Window;
+  // X11 Datastructure Related
+  DISPLAY * Display;
+  WINDOW Window;
 
   void (*GetCurrentPosition)(struct MOUSE_DEVICE * this);
   POSITION (*SetCurrentPosition)(struct MOUSE_DEVICE * this, POSITION Position);
