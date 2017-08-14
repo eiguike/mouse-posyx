@@ -7,9 +7,9 @@ void SetCurrentPositionLinux (MOUSE * this, POSITION NewPosition) {
   printf("SetCurrentPositionWindows begin...\n");
   printf("X: %d\nY: %d\n",NewPosition.X, NewPosition.Y);
 
-  XSelectInput(this->Disp, this->Window, KeyReleaseMask);
-  XWarpPointer(this->Disp, None, this->Window, 0, 0, 0, 0, NewPosition.X, NewPosition.Y);
-  XFlush(this->Disp);
+  XSelectInput(this->Display, this->Window, KeyReleaseMask);
+  XWarpPointer(this->Display, None, this->Window, 0, 0, 0, 0, NewPosition.X, NewPosition.Y);
+  XFlush(this->Display);
 
   this->Position = NewPosition;
 }
@@ -45,8 +45,8 @@ MOUSE * InitializeMouseDevice () {
   Mouse->GetCurrentPosition = GetCurrentPositionLinux;
   Mouse->SetCurrentPosition = SetCurrentPositionLinux;
 
-  Mouse->Disp = XOpenDisplay(0);
-  Mouse->Window = XRootWindow(Mouse->Disp, 0);
+  Mouse->Display = XOpenDisplay(0);
+  Mouse->Window = XRootWindow(Mouse->Display, 0);
 /*#elif WINDOWS
   Mouse->GetCurrentPosition = GetCurrentPositionWindows;
   Mouse->SetCurrentPosition = SetCurrentPositionWindows;
