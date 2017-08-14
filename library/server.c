@@ -2,6 +2,9 @@
 #include <libwebsockets.h>
 #include <string.h>
 #include "../include/server.h"
+#include "../include/mouse.h"
+
+extern MOUSE * gMouse;
 
 struct lws_protocols protocols[] =
 {
@@ -21,13 +24,13 @@ struct lws_protocols protocols[] =
 	{ NULL, NULL, 0, 0 } /* terminator */
 };
 
-void PositionParser (char * Input, int * x, int * y) {
+void PositionParser (char * Input, POSITION * Position) {
   char * pointer = NULL;
 
   pointer = strtok(Input, "@");
-  *x = atoi(pointer);
+  Position->X = atoi(pointer);
   pointer = strtok(NULL, "@");
-  *y = atoi(pointer);
+  Position->Y = atoi(pointer);
 }
 
 int callback_http( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
@@ -46,22 +49,22 @@ int callback_http( struct lws *wsi, enum lws_callback_reasons reason, void *user
 
 int callback_mouse( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
 {
-  unsigned int x,y;
+  POSITION Position;
 	switch(reason)
 	{
 		case LWS_CALLBACK_RECEIVE:
-			memcpy( &received_payload.data[LWS_SEND_BUFFER_PRE_PADDING], in, len );
-			received_payload.len = len;
+			memcpy( &Message.data[LWS_SEND_BUFFER_PRE_PADDING], in, len );
+			Message.len = len;
 
       // Parsing and set cursor position
-      PositionParser (in, &x, &y);
-      SetCursorPos (x,y);
+      PositionParser (in, &Position);
+      gMouse->SetCurrentPosition(gMouse, Position);
 
-			lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));
+			//lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));
 			break;
 
 		case LWS_CALLBACK_SERVER_WRITEABLE:
-			lws_write( wsi, &received_payload.data[LWS_SEND_BUFFER_PRE_PADDING], received_payload.len, LWS_WRITE_TEXT );
+			lws_write( wsi, &Message.data[LWS_SEND_BUFFER_PRE_PADDING], Message.len, LWS_WRITE_TEXT );
 			break;
 
 		default:
@@ -104,7 +107,7 @@ SERVER * InitializeServer(int Port) {
   }
 
   Server->Protocols = protocols;
-  Server->NumbersOfProtocols = 2;
+  Server->NumbersOfProtocols = NUMBERS_OF_PROTOCOLS;
 
   struct lws_context_creation_info * ContextInfo;
   ContextInfo = malloc(sizeof(struct lws_context_creation_info));
