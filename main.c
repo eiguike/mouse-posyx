@@ -4,8 +4,6 @@
 #include "include/mouse.h"
 #include "include/server.h"
 
-#define LINUX
-
 MOUSE * gMouse = NULL;
 
 int main() {
