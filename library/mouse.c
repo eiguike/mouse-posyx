@@ -1,7 +1,8 @@
 #include "../include/server.h"
 #include "../include/mouse.h"
-#include <X11/Xlib.h>
 
+#ifdef LINUX
+#include <X11/Xlib.h>
 
 void SetCurrentPositionLinux (MOUSE * this, POSITION NewPosition) {
   printf("SetCurrentPositionWindows begin...\n");
@@ -20,7 +21,9 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
 
   return this->Position;
 }
+#endif
 
+#ifdef WINDOWS
 void SetCurrentPositionWindows (MOUSE * this, POSITION NewPosition) {
   printf("SetCurrentPositionWindows begin...\n");
 
@@ -35,6 +38,8 @@ POSITION GetCurrentPositionWindows (MOUSE * this) {
   return this->Position;
 }
 
+#endif
+
 MOUSE * InitializeMouseDevice () {
   MOUSE * Mouse = (MOUSE*)malloc(sizeof(MOUSE));
 
@@ -42,16 +47,17 @@ MOUSE * InitializeMouseDevice () {
     goto FINISH;
   }
 
+#ifdef LINUX
   Mouse->GetCurrentPosition = GetCurrentPositionLinux;
   Mouse->SetCurrentPosition = SetCurrentPositionLinux;
 
   Mouse->Display = XOpenDisplay(0);
   Mouse->Window = XRootWindow(Mouse->Display, 0);
-/*#elif WINDOWS
+#elif WINDOWS
   Mouse->GetCurrentPosition = GetCurrentPositionWindows;
   Mouse->SetCurrentPosition = SetCurrentPositionWindows;
-#endifa
-*/
+#endif
+
 
 FINISH:
   return Mouse;
