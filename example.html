@@ -1,6 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
-  <title>Websocket example</title>
+  <head>
+    <title>Mouse Posyx</title>
+  </head>
+
   <body>
     X Position: <input type="text" id="x_pos">
     Y Position: <input type="text" id="y_pos">
@@ -9,6 +12,7 @@
   </body>
 
   <script>
+    // connection parts
     var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "mouse-protocol" );
     function update(msg) { document.getElementById("num").innerHTML = msg; }
     socket.onopen = function() { console.log("socket open"); update("open"); }
