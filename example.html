@@ -5,36 +5,43 @@
   </head>
 
   <body>
-    X Position: <input type="text" id="x_pos">
-    Y Position: <input type="text" id="y_pos">
-    <input type="submit" id="button" value="Submit">
-    <p id="num"></p>
+    <div id="screen" style="background-color: gray; height: 400px;"></div>
+    <div id="touchpad" style="background-color: red; height: 500px;"></div>
   </body>
 
-  <script>
-    // connection parts
-    var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "mouse-protocol" );
-    function update(msg) { document.getElementById("num").innerHTML = msg; }
-    socket.onopen = function() { console.log("socket open"); update("open"); }
-    socket.onclose = function() { console.log("socket close"); update("closed"); }
-    socket.onmessage = function(msg) { console.log("socket message: " + msg.data); update(msg.data); }
+<script>
+  var touchpad_html = document.querySelector("#touchpad");
+  touchpad_html.addEventListener("touchstart", touchStart, false);
+  touchpad_html.addEventListener("touchend", touchEnd, false);
 
-    button = document.querySelector('#button');
-    button.addEventListener('click', function (e) {
-      var x = document.querySelector('#x_pos').value;
-      var y = document.querySelector('#y_pos').value;
+  function touchStart(e) {
+    e.target.addEventListener("touchmove", touchMoved, false);
+  }
 
-      socket.send(x+"@"+y);
-    });
+  function touchEnd(e) {
+    e.target.removeEventListener("touchmove", touchMoved, false);
+  }
 
-    function stress_test() {
-      var limit = 100000;
+  function touchMoved(e) {
+    touchpad_html.innerHTML = "X:" + e.touches[0].clientX + "  Y:" + e.touches[0].clientY;
+    socket.send(Math.floor(e.touches[0].clientX) + "@" + Math.floor(e.touches[0].clientY));
+  }
 
-      for (i=0; i < limit; i++) {
-        var value1 = Math.floor(Math.random() * 1920);
-        var value2 = Math.floor(Math.random() * 1080);
-        socket.send(value1+"@"+value2);
-      }
+  // connection parts
+  var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "mouse-protocol" );
+  function update(msg) { document.getElementById("num").innerHTML = msg; }
+  socket.onopen = function() { console.log("socket open"); update("open"); }
+  socket.onclose = function() { console.log("socket close"); update("closed"); }
+  socket.onmessage = function(msg) { console.log("socket message: " + msg.data); update(msg.data); }
+
+  function stress_test() {
+    var limit = 100000;
+
+    for (i=0; i < limit; i++) {
+      var value1 = Math.floor(Math.random() * 1920);
+      var value2 = Math.floor(Math.random() * 1080);
+      socket.send(value1+"@"+value2);
     }
-  </script>
+  }
+</script>
 </html>
