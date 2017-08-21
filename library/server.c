@@ -26,6 +26,7 @@ struct lws_protocols protocols[] =
 
 void PositionParser (char * Input, POSITION * Position) {
   char * pointer = NULL;
+  printf("INPUT %s\n", Input);
 
   pointer = strtok(Input, "@");
   Position->X = atoi(pointer);
@@ -58,7 +59,7 @@ int callback_mouse( struct lws *wsi, enum lws_callback_reasons reason, void *use
 
       // Parsing and set cursor position
       PositionParser (in, &Position);
-      gMouse->SetCurrentPosition(gMouse, Position);
+      gMouse->SetCurrentPosition (gMouse, Position);
 
 			//lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));
 			break;

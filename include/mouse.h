@@ -6,7 +6,9 @@
 #include <X11/Xlib.h>
 
 typedef struct {
+  unsigned int startX;
   unsigned int X;
+  unsigned int startY;
   unsigned int Y;
 } POSITION;
 
