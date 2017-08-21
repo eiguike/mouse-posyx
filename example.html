@@ -1,38 +1,54 @@
  <!DOCTYPE html>
-<html>
+<html style="height: 100%">
   <head>
     <title>Mouse Posyx</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 
-  <body>
-    <div id="screen" style="background-color: gray; height: 400px;"></div>
-    <div id="touchpad" style="background-color: red; height: 500px;"></div>
+  <body style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px; height: 100%;">
+    <div style="height: 100%; width: 100%; background-color: gray">
+    </div>
   </body>
 
 <script>
-  var touchpad_html = document.querySelector("#touchpad");
+  var sensivity = 3;
+  var touchpad_html = document.querySelector("body");
   touchpad_html.addEventListener("touchstart", touchStart, false);
   touchpad_html.addEventListener("touchend", touchEnd, false);
 
+  position = {
+    initial_x:0, initial_y:0
+  }
+
   function touchStart(e) {
     e.target.addEventListener("touchmove", touchMoved, false);
+    position.initial_x = e.touches[0].clientX;
+    position.initial_y = e.touches[0].clientY;
   }
 
   function touchEnd(e) {
     e.target.removeEventListener("touchmove", touchMoved, false);
+    position.initial_x = 0;
+    position.initial_y = 0;
   }
 
   function touchMoved(e) {
-    touchpad_html.innerHTML = "X:" + e.touches[0].clientX + "  Y:" + e.touches[0].clientY;
-    socket.send(Math.floor(e.touches[0].clientX) + "@" + Math.floor(e.touches[0].clientY));
+    final_x = position.initial_x - e.touches[0].clientX;
+    final_y = position.initial_y - e.touches[0].clientY;
+
+    touchpad_html.innerHTML = "X:" + position.initial_x + "  Y:" + position.initial_y;
+
+    position.initial_x = e.touches[0].clientX;
+    position.initial_y = e.touches[0].clientY;
+
+    socket.send(Math.floor(final_x * sensivity) + "@" + Math.floor(final_y * sensivity));
   }
 
   // connection parts
   var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "mouse-protocol" );
-  function update(msg) { document.getElementById("num").innerHTML = msg; }
-  socket.onopen = function() { console.log("socket open"); update("open"); }
-  socket.onclose = function() { console.log("socket close"); update("closed"); }
-  socket.onmessage = function(msg) { console.log("socket message: " + msg.data); update(msg.data); }
+  socket.onopen = function() { console.log("socket open");}
+  socket.onclose = function() { console.log("socket close");}
+  socket.onmessage = function(msg) { console.log("socket message: " + msg.data); }
 
   function stress_test() {
     var limit = 100000;
