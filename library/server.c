@@ -85,17 +85,18 @@ int Start(SERVER * this) {
 }
 
 int Stop(SERVER * this) {
+	/*
   this->IsStop = 1;
 
   while(this->IsStop) {
-    sleep(1);
+    //sleep(1);
   }
-
-	lws_context_destroy(this->Context);
+  lws_context_destroy(this->Context);
   free(this->ContextInfo);
   free(this);
 
   return 0;
+  */
 }
 
 SERVER * InitializeServer(int Port) {
@@ -130,7 +131,7 @@ SERVER * InitializeServer(int Port) {
   Server->Context = lws_create_context(Server->ContextInfo);
 
   Server->Start = Start;
-  //Server->Stop = Stop;
+  Server->Stop = Stop;
 
 FAIL:
   return Server;
