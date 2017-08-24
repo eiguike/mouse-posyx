@@ -5,6 +5,8 @@ project(mouse-posyx C)
 add_library(Mouse STATIC library/mouse.c)
 add_library(Server STATIC library/server.c)
 
+include_directories("./include")
+
 set(SOURCE_FILES main.c)
 add_executable(mouse-posyx ${SOURCE_FILES})
 
@@ -22,7 +24,6 @@ if(UNIX)
 endif()
 
 if(WIN32)
-  include_directories("./include")
   include_directories("./libwebsockets/build/include")
   include_directories("C:/OpenSSL-Win32/include")
 
