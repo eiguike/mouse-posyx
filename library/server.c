@@ -1,8 +1,8 @@
 
 #include <libwebsockets.h>
 #include <string.h>
-#include "../include/server.h"
-#include "../include/mouse.h"
+#include "server.h"
+#include "mouse.h"
 
 extern MOUSE * gMouse;
 
@@ -100,7 +100,7 @@ int Stop(SERVER * this) {
 }
 
 SERVER * InitializeServer(int Port) {
-  SERVER * Server = malloc(sizeof(SERVER));
+  SERVER * Server = (SERVER*) malloc(sizeof(SERVER));
 
   if (Server == NULL) {
     printf("RESOURCE FAILED\n");

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/mouse.h"
-#include "include/server.h"
+#include "mouse.h"
+#include "server.h"
 
 MOUSE * gMouse = NULL;
 

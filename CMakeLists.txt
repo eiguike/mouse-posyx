@@ -22,11 +22,12 @@ if(UNIX)
 endif()
 
 if(WIN32)
+  include_directories("./include")
   include_directories("./libwebsockets/build/include")
-  include_directories("C:/OpenSSL-Win64/include")
+  include_directories("C:/OpenSSL-Win32/include")
 
   #target_link_libraries(Server "websockets.dll")
-  target_link_libraries(Server "C:/Users/japae/Documents/mouse-posyx/libwebsockets/build/lib/websockets.lib")
+  target_link_libraries(Server "C:/Users/japae/Documents/mouse-posyx/libwebsockets/build/lib/*.lib")
 
   add_definitions(-DWINDOWS)
   MESSAGE("Building for Windows")
