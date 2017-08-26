@@ -7,8 +7,8 @@
 MOUSE * gMouse = NULL;
 
 int main() {
-  SERVER * Server = InitializeServer(8000);
-
   gMouse = InitializeMouseDevice ();
+  SERVER * Server = InitializeServer(8000);
+  
   Server->Start(Server);
 }

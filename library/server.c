@@ -27,6 +27,8 @@ struct lws_protocols protocols[] =
 void PositionParser (char * Input, POSITION * Position) {
   char * pointer = NULL;
 
+  printf("INPUT: %s\n", Input);
+
   pointer = strtok(Input, "@");
   Position->X = atoi(pointer);
   pointer = strtok(NULL, "@");
@@ -100,39 +102,23 @@ int Stop(SERVER * this) {
 }
 
 SERVER * InitializeServer(int Port) {
-  SERVER * Server = (SERVER*) malloc(sizeof(SERVER));
+  struct lws_context_creation_info ContextInfo;
 
-  if (Server == NULL) {
-    printf("RESOURCE FAILED\n");
-    goto FAIL;
+  memset(&ContextInfo, 0, sizeof(ContextInfo));
+
+  ContextInfo.port = Port;
+  ContextInfo.protocols = protocols;
+  ContextInfo.gid = -1;
+  ContextInfo.uid = -1;
+
+  //Server->ContextInfo = ContextInfo;
+  struct lws_context * Context = lws_create_context(&ContextInfo);
+  while(1) {
+    lws_service(Context, 1000000);  
   }
 
-  Server->Protocols = protocols;
-  Server->NumbersOfProtocols = NUMBERS_OF_PROTOCOLS;
-
-  struct lws_context_creation_info * ContextInfo;
-  ContextInfo = malloc(sizeof(struct lws_context_creation_info));
-
-  if (ContextInfo == NULL) {
-    printf("RESOURCE FAILED\n");
-    free(Server);
-    Server = NULL;
-    goto FAIL;
-  }
-
-  memset(ContextInfo, 0, sizeof(ContextInfo));
-
-  ContextInfo->port = Port;
-  ContextInfo->protocols = Server->Protocols;
-  ContextInfo->gid = -1;
-  ContextInfo->uid = -1;
-
-  Server->ContextInfo = ContextInfo;
-  Server->Context = lws_create_context(Server->ContextInfo);
-
-  Server->Start = Start;
-  Server->Stop = Stop;
-
+  lws_context_destroy(Context);
+    
 FAIL:
-  return Server;
+  return NULL;
 }
