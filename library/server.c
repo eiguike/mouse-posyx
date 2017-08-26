@@ -87,7 +87,7 @@ int Start(SERVER * this) {
 }
 
 int Stop(SERVER * this) {
-	/*
+/*
   this->IsStop = 1;
 
   while(this->IsStop) {
@@ -98,7 +98,7 @@ int Stop(SERVER * this) {
   free(this);
 
   return 0;
-  */
+*/
 }
 
 SERVER * InitializeServer(int Port) {

@@ -6,17 +6,16 @@
 
 #ifdef LINUX
 #include <X11/Xlib.h>
+
+typedef Display DISPLAY;
+typedef Window WINDOW;
+
 #endif
 
 typedef struct {
   unsigned int X;
   unsigned int Y;
 } POSITION;
-
-#ifdef LINUX
-typedef Display DISPLAY;
-typedef Window WINDOW;
-#endif
 
 typedef struct MOUSE_DEVICE {
   // Mouse position
