@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/mouse.h"
-#include "include/server.h"
+#include "mouse.h"
+#include "server.h"
 
 MOUSE * gMouse = NULL;
 
 int main() {
-  SERVER * Server = InitializeServer(8000);
-
   gMouse = InitializeMouseDevice ();
+  SERVER * Server = InitializeServer(8000);
+  
   Server->Start(Server);
 }

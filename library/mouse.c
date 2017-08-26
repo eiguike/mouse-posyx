@@ -1,5 +1,5 @@
-#include "../include/server.h"
-#include "../include/mouse.h"
+#include "server.h"
+#include "mouse.h"
 
 #ifdef LINUX
 #include <X11/Xlib.h>
