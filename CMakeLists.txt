@@ -27,8 +27,7 @@ if(WIN32)
   include_directories("./libwebsockets/build/include")
   include_directories("C:/OpenSSL-Win32/include")
 
-  #target_link_libraries(Server "websockets.dll")
-  target_link_libraries(Server "C:/Users/japae/Documents/mouse-posyx/libwebsockets/build/lib/*.lib")
+  target_link_libraries(Server "${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/lib/*.lib")
 
   add_definitions(-DWINDOWS)
   MESSAGE("Building for Windows")
