@@ -5,14 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 
-  <body style="margin:0px 0px 0px 0px;padding:0px 0px 0px 0px; height: 100%;">
-    <div style="height: 100%; width: 100%; background-color: gray">
+  <style>
+  body {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    height: 100%;
+    touch-action: none;
+  }
+
+  #touchpad {
+    height: 50%;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: gray;
+  }
+  </style>
+
+  <body>
+    <div id="touchpad">
     </div>
   </body>
 
 <script>
   var sensivity = 3;
-  var touchpad_html = document.querySelector("body");
+  var touchpad_html = document.querySelector("#touchpad");
   touchpad_html.addEventListener("touchstart", touchStart, false);
   touchpad_html.addEventListener("touchend", touchEnd, false);
 
