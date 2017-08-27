@@ -26,14 +26,13 @@ struct lws_protocols protocols[] =
 
 void PositionParser (char * Input, POSITION * Position) {
   char * pointer = NULL;
-  printf("INPUT %s\n", Input);
-
   printf("INPUT: %s\n", Input);
 
   pointer = strtok(Input, "@");
   Position->X = atoi(pointer);
   pointer = strtok(NULL, "@");
   Position->Y = atoi(pointer);
+  printf("X: %d Y: %d\n", Position->X, Position->Y);
 }
 
 int callback_http( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
@@ -53,6 +52,8 @@ int callback_http( struct lws *wsi, enum lws_callback_reasons reason, void *user
 int callback_mouse( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
 {
   POSITION Position;
+  Position.X = 0;
+  Position.Y = 0;
 	switch(reason)
 	{
 		case LWS_CALLBACK_RECEIVE:
