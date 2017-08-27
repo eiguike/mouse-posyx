@@ -13,10 +13,8 @@ typedef Window WINDOW;
 #endif
 
 typedef struct {
-  unsigned int startX;
-  unsigned int X;
-  unsigned int startY;
-  unsigned int Y;
+  int X;
+  int Y;
 } POSITION;
 
 typedef struct MOUSE_DEVICE {
