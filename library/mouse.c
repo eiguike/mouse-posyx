@@ -17,7 +17,7 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
   WINDOW root, child;
 
   XQueryPointer(this->Display, this->Window, &root, &child,
-                &rootX, &rootY, &winX, &winY, &mask);
+      &rootX, &rootY, &winX, &winY, &mask);
 
   this->Position.startX = rootX;
   this->Position.startY = rootX;
@@ -27,10 +27,22 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
 #endif
 
 #ifdef WINDOWS
+#include <windows.h>
+
 void SetCurrentPositionWindows (MOUSE * this, POSITION NewPosition) {
   printf("SetCurrentPositionWindows begin...\n");
 
-  this->Position = NewPosition;
+  printf("Current: X: %d Y: %d\n", Pos.X, Pos.Y);
+
+  POINT Pos;
+  GetCursorPos(&Pos);
+  Pos.X = Pos.X + NewPosition.X;
+  Pos.Y = Pos.Y + NewPosition.Y;
+
+  printf("New: X: %d Y: %d\n", Pos.X, Pos.Y);
+
+  SetCursorPos(Pos.X, Pos.Y);
+
   return;
 }
 
