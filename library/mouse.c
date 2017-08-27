@@ -31,17 +31,19 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
 
 void SetCurrentPositionWindows (MOUSE * this, POSITION NewPosition) {
   printf("SetCurrentPositionWindows begin...\n");
-
-  printf("Current: X: %d Y: %d\n", Pos.X, Pos.Y);
-
   POINT Pos;
+
   GetCursorPos(&Pos);
-  Pos.X = Pos.X + NewPosition.X;
-  Pos.Y = Pos.Y + NewPosition.Y;
 
-  printf("New: X: %d Y: %d\n", Pos.X, Pos.Y);
+  printf("Received: X: %d Y: %d\n", NewPosition.X, NewPosition.Y);
+  printf("Current: X: %d Y: %d\n", Pos.x, Pos.y);
 
-  SetCursorPos(Pos.X, Pos.Y);
+  Pos.x = Pos.x - NewPosition.X;
+  Pos.y  = Pos.y - NewPosition.Y;
+
+  printf("New: X: %d Y: %d\n", Pos.x, Pos.y);
+
+  SetCursorPos(Pos.x, Pos.y);
 
   return;
 }
