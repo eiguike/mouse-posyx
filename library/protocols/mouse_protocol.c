@@ -27,6 +27,13 @@ int callback_mouse( struct lws *wsi, enum lws_callback_reasons reason, void *use
 			memcpy( &Message.data[LWS_SEND_BUFFER_PRE_PADDING], in, len );
 			Message.len = len;
 
+      if (strcmp(in, "lokura") == 0) {
+        gMouse->ClickEvent (gMouse, 1);
+        break;
+      } else if (strcmp(in, "hue") == 0) {
+        gMouse->ClickEvent (gMouse, 3);
+      }
+
       // Parsing and set cursor position
       PositionParser (in, &Position);
       gMouse->SetCurrentPosition (gMouse, Position);
