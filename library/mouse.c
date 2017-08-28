@@ -19,8 +19,8 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
   XQueryPointer(this->Display, this->Window, &root, &child,
       &rootX, &rootY, &winX, &winY, &mask);
 
-  this->Position.startX = rootX;
-  this->Position.startY = rootX;
+  this->Position.X = rootX;
+  this->Position.Y = rootX;
 
   return this->Position;
 }

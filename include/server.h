@@ -1,18 +1,13 @@
-#include <libwebsockets.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef SERVER_H
+#define SERVER_H
 
-#include "mouse.h"
+#include <libwebsockets.h>
+
+#include "protocols/http_protocol.h"
+#include "protocols/mouse_protocol.h"
 
 #define EXAMPLE_RX_BUFFER_BYTES (50)
 #define NUMBERS_OF_PROTOCOLS 2
-
-int callback_http(struct lws *wsi,
-                  enum lws_callback_reasons reason,
-                  void * user,
-                  void *in,
-                  size_t len);
 
 int callback_mouse(struct lws *wsi,
                    enum lws_callback_reasons reason,
@@ -39,3 +34,5 @@ typedef struct WEBSOCKET_SERVER {
 int Start (SERVER * this);
 int Stop (SERVER * this);
 SERVER * InitializeServer(int Port);
+
+#endif

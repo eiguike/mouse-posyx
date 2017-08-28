@@ -4,6 +4,8 @@ project(mouse-posyx C)
 
 add_library(Mouse STATIC library/mouse.c)
 add_library(Server STATIC library/server.c)
+add_library(ServerMouse STATIC library/protocols/mouse_protocol.c)
+add_library(ServerHTTP STATIC library/protocols/http_protocol.c)
 
 include_directories("./include")
 
@@ -13,6 +15,8 @@ add_executable(mouse-posyx ${SOURCE_FILES})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/example.html
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+target_link_libraries(Server ServerMouse)
+target_link_libraries(Server ServerHTTP)
 target_link_libraries(mouse-posyx Server)
 target_link_libraries(mouse-posyx Mouse)
 
