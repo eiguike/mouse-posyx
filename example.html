@@ -20,18 +20,51 @@
     margin-right: auto;
     background-color: gray;
   }
+
+  .lokura {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .div_click {
+    height: 100px;
+    width: 50%;
+  }
+
+  #left_click {
+    background-color: red;
+  }
+
+  #right_click {
+    background-color: yellow;
+  }
   </style>
 
   <body>
-    <div id="touchpad">
+    <div id="touchpad"></div>
+    <div class="lokura">
+      <div id="left_click" class="div_click"></div>
+      <div id="right_click" class="div_click"></div>
     </div>
   </body>
 
 <script>
   var sensivity = 3;
   var touchpad_html = document.querySelector("#touchpad");
+  var left_html = document.querySelector("#left_click");
+  var right_html = document.querySelector("#left_click");
   touchpad_html.addEventListener("touchstart", touchStart, false);
   touchpad_html.addEventListener("touchend", touchEnd, false);
+
+  left_html.addEventListener("touchstart", leftClickEvent, false);
+  right_html.addEventListener("touchstart", rightClickEvent, false);
+
+  function leftClickEvent(e) {
+    //socket.send("lokura");
+  }
+  function rightClickEvent(e) {
+    socket.send("hue");
+  }
 
   position = {
     initial_x:0, initial_y:0
