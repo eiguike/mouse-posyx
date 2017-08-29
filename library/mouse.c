@@ -102,8 +102,32 @@ POSITION GetCurrentPositionWindows (MOUSE * this) {
   return this->Position;
 }
 
-void CickEventWindows (MOUSE * this, const int Button) {
+void ClickEventWindows (MOUSE * this, const int Button) {
   printf("ClickEventWindows begin...\n");
+
+  if(Button == 1) {
+    INPUT Input={0};
+
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+    SendInput(1, &Input, sizeof(INPUT));
+
+    memset(&Input, 0, sizeof(Input));
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+    SendInput(1, &Input, sizeof(INPUT));
+  } else {
+    INPUT Input={0};
+
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+    SendInput(1, &Input, sizeof(INPUT));
+
+    memset(&Input, 0, sizeof(Input));
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+    SendInput(1, &Input, sizeof(INPUT));
+  }
 }
 
 #endif
