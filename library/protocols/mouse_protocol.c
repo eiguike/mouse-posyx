@@ -5,7 +5,7 @@
 
 extern MOUSE * gMouse;
 
-COMMAND_MAPPING CommandMapping = {
+static COMMAND_MAPPING CommandMapping[] = {
   {
     "MOVE",
     PositionParser
@@ -38,10 +38,10 @@ void PositionParser (char * Input) {
 
   char * Pointer = NULL;
   Pointer = strtok(NULL, "@");
-  Position->X = atoi(Pointer);
+  Position.X = atoi(Pointer);
   Pointer = strtok(NULL, "@");
-  Position->Y = atoi(Pointer);
-  printf("X: %d Y: %d\n", Position->X, Position->Y);
+  Position.Y = atoi(Pointer);
+  printf("X: %d Y: %d\n", Position.X, Position.Y);
 
   // Parsing and set cursor position
   gMouse->SetCurrentPosition (gMouse, Position);
@@ -50,15 +50,18 @@ void PositionParser (char * Input) {
 void ClickParser (char * Input) {
   char * Pointer = NULL;
 
+  printf("ClickParser begin...\n");
+  printf("Input %s\n", Pointer);
   Pointer = strtok(NULL, "@");
-  gMouse->Click(gMouse, atoi(Pointer));
+  printf("Pointer %s\n", Pointer);
+  gMouse->ClickEvent(gMouse, atoi(Pointer));
 }
 
 void ReleaseClickParser (char * Input) {
   char * Pointer = NULL;
 
   Pointer = strtok(NULL, "@");
-  gMouse->Click(gMouse, atoi(Pointer));
+  gMouse->ClickEvent(gMouse, atoi(Pointer));
 }
 
 int callback_mouse(struct lws *wsi,
@@ -68,6 +71,7 @@ int callback_mouse(struct lws *wsi,
                    size_t len) {
 	switch(reason) {
 		case LWS_CALLBACK_RECEIVE:
+      printf("Command: %s\n", in);
       char * Pointer = NULL;
       unsigned int Index = 0;
 
@@ -75,11 +79,12 @@ int callback_mouse(struct lws *wsi,
 			Message.len = len;
 
       Pointer = strtok(in, "@");
-      while(CommandMapping[i].Command != NULL) {
-        if (strcmp(Pointer, CommandMapping[i].Command) == 0) {
-          CommandMapping[i].Execute(Pointer);
-          break;
+      while(CommandMapping[Index].Command != NULL) {
+        if (strcmp(Pointer, CommandMapping[Index].Command) == 0) {
+          CommandMapping[Index].ExecuteCommand(Pointer);
+          goto FINISH;
         }
+        Index++;
       }
 
       printf("%s possible trash command\n",in);
@@ -94,6 +99,8 @@ int callback_mouse(struct lws *wsi,
 		default:
 			break;
 	}
+
+FINISH:
 
 	return 0;
 }

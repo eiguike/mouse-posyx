@@ -11,7 +11,7 @@ int callback_mouse(struct lws *wsi,
 
 typedef struct MOUSE_PROTOCOL_MAPPING {
 	char * Command;
-	(VOID *) (Execute)();
+	void (*ExecuteCommand)();
 } COMMAND_MAPPING;
 
 void PositionParser (char * Input);
