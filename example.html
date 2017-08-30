@@ -60,10 +60,10 @@
   right_html.addEventListener("touchstart", rightClickEvent, false);
 
   function leftClickEvent(e) {
-    socket.send("lokura");
+    socket.send("LEFT_CLICK@1");
   }
   function rightClickEvent(e) {
-    //socket.send("hue");
+    //socket.send("RIGHT_CLICK@3");
   }
 
   position = {
@@ -91,7 +91,13 @@
     position.initial_x = e.touches[0].clientX;
     position.initial_y = e.touches[0].clientY;
 
-    socket.send(Math.floor(final_x * sensivity) + "@" + Math.floor(final_y * sensivity));
+    x = Math.floor(final_x * sensivity);
+    y = Math.floor(final_y * sensivity);
+
+    if ((x != 0) || (y != 0)){
+      socket.send("MOVE@"+ x + "@" + y);  
+    }
+  
   }
 
   // connection parts
