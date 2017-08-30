@@ -52,18 +52,31 @@
   var sensivity = 3;
   var touchpad_html = document.querySelector("#touchpad");
   var left_html = document.querySelector("#left_click");
-  var right_html = document.querySelector("#left_click");
+  var right_html = document.querySelector("#right_click");
+
   touchpad_html.addEventListener("touchstart", touchStart, false);
   touchpad_html.addEventListener("touchend", touchEnd, false);
 
   left_html.addEventListener("touchstart", leftClickEvent, false);
+  left_html.addEventListener("touchend", leftReleaseClickEvent, false);
+
   right_html.addEventListener("touchstart", rightClickEvent, false);
+  right_html.addEventListener("touchend", rightReleaseClickEvent, false);
+
+  function leftReleaseClickEvent(e) {
+    socket.send("RELEASE_CLICK@1");
+  }
 
   function leftClickEvent(e) {
-    socket.send("LEFT_CLICK@1");
+    socket.send("CLICK@1");
   }
+
   function rightClickEvent(e) {
-    //socket.send("RIGHT_CLICK@3");
+    socket.send("CLICK@3");
+  }
+
+  function rightReleaseClickEvent(e) {
+    socket.send("RELEASE_CLICK@3");
   }
 
   position = {
@@ -72,8 +85,8 @@
 
   function touchStart(e) {
     e.target.addEventListener("touchmove", touchMoved, false);
-    position.initial_x = e.touches[0].clientX;
-    position.initial_y = e.touches[0].clientY;
+    position.initial_x = e.targetTouches[0].clientX;
+    position.initial_y = e.targetTouches[0].clientY;
   }
 
   function touchEnd(e) {
@@ -83,13 +96,13 @@
   }
 
   function touchMoved(e) {
-    final_x = position.initial_x - e.touches[0].clientX;
-    final_y = position.initial_y - e.touches[0].clientY;
+    final_x = position.initial_x - e.targetTouches[0].clientX;
+    final_y = position.initial_y - e.targetTouches[0].clientY;
 
     touchpad_html.innerHTML = "X:" + position.initial_x + "  Y:" + position.initial_y;
 
-    position.initial_x = e.touches[0].clientX;
-    position.initial_y = e.touches[0].clientY;
+    position.initial_x = e.targetTouches[0].clientX;
+    position.initial_y = e.targetTouches[0].clientY;
 
     x = Math.floor(final_x * sensivity);
     y = Math.floor(final_y * sensivity);
