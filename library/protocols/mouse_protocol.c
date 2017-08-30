@@ -11,19 +11,11 @@ static COMMAND_MAPPING CommandMapping[] = {
     PositionParser
   },
   {
-    "RELEASE_RIGHT",
+    "RELEASE_CLICK",
     ReleaseClickParser
   },
   {
-    "RELEASE_LEFT",
-    ReleaseClickParser
-  },
-  {
-    "RIGHT_CLICK",
-    ClickParser
-  },
-  {
-    "LEFT_CLICK",
+    "CLICK",
     ClickParser
   },
   {
@@ -61,7 +53,7 @@ void ReleaseClickParser (char * Input) {
   char * Pointer = NULL;
 
   Pointer = strtok(NULL, "@");
-  gMouse->ClickEvent(gMouse, atoi(Pointer));
+  gMouse->ReleaseClickEvent(gMouse, atoi(Pointer));
 }
 
 int callback_mouse(struct lws *wsi,
