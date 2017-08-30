@@ -6,7 +6,6 @@
 #include <string.h>
 
 void SetCurrentPositionLinux (MOUSE * this, POSITION NewPosition) {
-
   XSelectInput(this->Display, this->Window, KeyReleaseMask);
   XWarpPointer(this->Display, None, None, 0, 0, 0, 0, -1 * NewPosition.X, -1 * NewPosition.Y);
   XFlush(this->Display);

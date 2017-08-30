@@ -5,38 +5,84 @@
 
 extern MOUSE * gMouse;
 
-void PositionParser (char * Input, POSITION * Position) {
-  char * pointer = NULL;
-  printf("INPUT: %s\n", Input);
+COMMAND_MAPPING CommandMapping = {
+  {
+    "MOVE",
+    PositionParser
+  },
+  {
+    "RELEASE_RIGHT",
+    ReleaseClickParser
+  },
+  {
+    "RELEASE_LEFT",
+    ReleaseClickParser
+  },
+  {
+    "RIGHT_CLICK",
+    ClickParser
+  },
+  {
+    "LEFT_CLICK",
+    ClickParser
+  },
+  {
+    NULL, NULL
+  }
+};
 
-  pointer = strtok(Input, "@");
-  Position->X = atoi(pointer);
-  pointer = strtok(NULL, "@");
-  Position->Y = atoi(pointer);
-  printf("X: %d Y: %d\n", Position->X, Position->Y);
-}
-
-int callback_mouse( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
-{
+void PositionParser (char * Input) {
   POSITION Position;
   Position.X = 0;
   Position.Y = 0;
-	switch(reason)
-	{
+
+  char * Pointer = NULL;
+  Pointer = strtok(NULL, "@");
+  Position->X = atoi(Pointer);
+  Pointer = strtok(NULL, "@");
+  Position->Y = atoi(Pointer);
+  printf("X: %d Y: %d\n", Position->X, Position->Y);
+
+  // Parsing and set cursor position
+  gMouse->SetCurrentPosition (gMouse, Position);
+}
+
+void ClickParser (char * Input) {
+  char * Pointer = NULL;
+
+  Pointer = strtok(NULL, "@");
+  gMouse->Click(gMouse, atoi(Pointer));
+}
+
+void ReleaseClickParser (char * Input) {
+  char * Pointer = NULL;
+
+  Pointer = strtok(NULL, "@");
+  gMouse->Click(gMouse, atoi(Pointer));
+}
+
+int callback_mouse(struct lws *wsi,
+                   enum lws_callback_reasons reason, 
+                   void *user, 
+                   void *in, 
+                   size_t len) {
+	switch(reason) {
 		case LWS_CALLBACK_RECEIVE:
-			memcpy( &Message.data[LWS_SEND_BUFFER_PRE_PADDING], in, len );
+      char * Pointer = NULL;
+      unsigned int Index = 0;
+
+			memcpy(&Message.data[LWS_SEND_BUFFER_PRE_PADDING], in, len);
 			Message.len = len;
 
-      if (strcmp(in, "lokura") == 0) {
-        gMouse->ClickEvent (gMouse, 1);
-        break;
-      } else if (strcmp(in, "hue") == 0) {
-        gMouse->ClickEvent (gMouse, 3);
+      Pointer = strtok(in, "@");
+      while(CommandMapping[i].Command != NULL) {
+        if (strcmp(Pointer, CommandMapping[i].Command) == 0) {
+          CommandMapping[i].Execute(Pointer);
+          break;
+        }
       }
 
-      // Parsing and set cursor position
-      PositionParser (in, &Position);
-      gMouse->SetCurrentPosition (gMouse, Position);
+      printf("%s possible trash command\n",in);
 
 			//lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));
 			break;
