@@ -28,6 +28,7 @@ typedef struct MOUSE_DEVICE {
 #endif
 
   void (*ClickEvent)(struct MOUSE_DEVICE * this, const int ButtonValue);
+  void (*ReleaseClickEvent)(struct MOUSE_DEVICE * this, const int ButtonValue);
   void (*GetCurrentPosition)(struct MOUSE_DEVICE * this);
   POSITION (*SetCurrentPosition)(struct MOUSE_DEVICE * this, POSITION Position);
 } MOUSE;
