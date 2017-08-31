@@ -62,16 +62,9 @@ void ClickEventLinux (MOUSE * this, const int ButtonValue) {
   }
   XFlush(this->Display);
   usleep(1);
-
-  Event.type = ButtonRelease;
-  if(XSendEvent(this->Display, PointerWindow, True, ButtonReleaseMask, &Event) == 0) {
-    printf("error1\n");
-  }
-  XFlush(this->Display);
-  usleep(1);
 }
 void ReleaseClickEventLinux (MOUSE * this, const int ButtonValue) {
-  printf("ReleaseClickEventWindows begin...\n");
+  printf("ReleaseClickEventLinux begin...\n");
   printf("ButtonValue = %d\n", ButtonValue);
   XEvent Event;
 
