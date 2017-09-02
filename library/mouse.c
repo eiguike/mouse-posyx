@@ -3,9 +3,9 @@
 
 #ifdef LINUX
 #include <X11/Xlib.h>
+#include <string.h>
 
 void SetCurrentPositionLinux (MOUSE * this, POSITION NewPosition) {
-
   XSelectInput(this->Display, this->Window, KeyReleaseMask);
   XWarpPointer(this->Display, None, None, 0, 0, 0, 0, -1 * NewPosition.X, -1 * NewPosition.Y);
   XFlush(this->Display);
@@ -19,11 +19,90 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
   XQueryPointer(this->Display, this->Window, &root, &child,
       &rootX, &rootY, &winX, &winY, &mask);
 
-  this->Position.startX = rootX;
-  this->Position.startY = rootX;
+  this->Position.X = rootX;
+  this->Position.Y = rootX;
 
   return this->Position;
 }
+
+void ClickEventLinux (MOUSE * this, const int ButtonValue) {
+  printf("ClickEventLinux begin...\n");
+  printf("ButtonValue = %d\n", ButtonValue);
+  XEvent Event;
+
+  memset(&Event, 0, sizeof(Event));
+
+  switch(ButtonValue) {
+    default:
+    case 1:
+      Event.xbutton.button = Button1; // macro Button1 = Mouse1
+      break;
+    case 2:
+      Event.xbutton.button = Button2; // macro Button1 = Mouse1
+      break;
+    case 3:
+      Event.xbutton.button = Button3; // macro Button1 = Mouse1
+      break;
+  }
+  Event.type = ButtonPress;
+  Event.xbutton.same_screen = True;
+  Event.xbutton.subwindow = DefaultRootWindow (this->Display);
+
+  while (Event.xbutton.subwindow){
+    Event.xbutton.window = Event.xbutton.subwindow;
+    XQueryPointer (this->Display, Event.xbutton.window,
+        &Event.xbutton.root, &Event.xbutton.subwindow,
+        &Event.xbutton.x_root, &Event.xbutton.y_root,
+        &Event.xbutton.x, &Event.xbutton.y,
+        &Event.xbutton.state);
+  }
+
+  if(XSendEvent(this->Display, PointerWindow, True, ButtonPressMask, &Event) == 0) {
+    printf("error1\n");
+  }
+  XFlush(this->Display);
+  usleep(1);
+}
+void ReleaseClickEventLinux (MOUSE * this, const int ButtonValue) {
+  printf("ReleaseClickEventLinux begin...\n");
+  printf("ButtonValue = %d\n", ButtonValue);
+  XEvent Event;
+
+  memset(&Event, 0, sizeof(Event));
+
+  switch(ButtonValue) {
+    default:
+    case 1:
+      Event.xbutton.button = Button1; // macro Button1 = Mouse1
+      break;
+    case 2:
+      Event.xbutton.button = Button2; // macro Button1 = Mouse1
+      break;
+    case 3:
+      Event.xbutton.button = Button3; // macro Button1 = Mouse1
+      break;
+  }
+  Event.type = ButtonPress;
+  Event.xbutton.same_screen = True;
+  Event.xbutton.subwindow = DefaultRootWindow (this->Display);
+
+  while (Event.xbutton.subwindow){
+    Event.xbutton.window = Event.xbutton.subwindow;
+    XQueryPointer (this->Display, Event.xbutton.window,
+        &Event.xbutton.root, &Event.xbutton.subwindow,
+        &Event.xbutton.x_root, &Event.xbutton.y_root,
+        &Event.xbutton.x, &Event.xbutton.y,
+        &Event.xbutton.state);
+  }
+
+  Event.type = ButtonRelease;
+  if(XSendEvent(this->Display, PointerWindow, True, ButtonReleaseMask, &Event) == 0) {
+    printf("error1\n");
+  }
+  XFlush(this->Display);
+  usleep(1);
+}
+
 #endif
 
 #ifdef WINDOWS
@@ -55,6 +134,40 @@ POSITION GetCurrentPositionWindows (MOUSE * this) {
   return this->Position;
 }
 
+void ClickEventWindows (MOUSE * this, const int Button) {
+  printf("ClickEventWindows begin...\n");
+
+  INPUT Input={0};
+
+  memset(&Input, 0, sizeof(Input));
+  Input.type = INPUT_MOUSE;
+
+  if (Button == 1) {
+    Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+  } else {
+    Input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+  }
+
+  SendInput(1, &Input, sizeof(INPUT));
+}
+
+void ReleaseClickEventWindows (MOUSE * this, const int Button) {
+  printf("ReleaseClickEventWindows begin...\n");
+  INPUT Input={0};
+
+  memset(&Input, 0, sizeof(Input));
+  Input.type = INPUT_MOUSE;
+
+  if (Button == 1) {
+    Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+  } else {
+    Input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+  }
+
+  SendInput(1, &Input, sizeof(INPUT));
+}
+
+
 #endif
 
 MOUSE * InitializeMouseDevice () {
@@ -65,6 +178,8 @@ MOUSE * InitializeMouseDevice () {
   }
 
 #ifdef LINUX
+  Mouse->ClickEvent = ClickEventLinux;
+  Mouse->ReleaseClickEvent = ReleaseClickEventLinux;
   Mouse->GetCurrentPosition = GetCurrentPositionLinux;
   Mouse->SetCurrentPosition = SetCurrentPositionLinux;
 
@@ -73,6 +188,8 @@ MOUSE * InitializeMouseDevice () {
 
   Mouse->GetCurrentPosition (Mouse);
 #elif WINDOWS
+  Mouse->ClickEvent = ClickEventWindows;
+  Mouse->ReleaseClickEvent = ReleaseClickEventWindows;
   Mouse->GetCurrentPosition = GetCurrentPositionWindows;
   Mouse->SetCurrentPosition = SetCurrentPositionWindows;
 #endif
