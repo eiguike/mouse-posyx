@@ -23,12 +23,15 @@ if(UNIX)
   target_link_libraries(Mouse X11)
   target_link_libraries(Keyboard Xtst)
   target_link_libraries(Server websockets)
+
   add_definitions(-DLINUX)
   MESSAGE("Building for Linux")
 endif()
 
 if(WIN32)
+  add_library(Keyboard STATIC library/keyboard_windows.c)
   add_library(Mouse STATIC library/mouse_windows.c)
+
   include_directories("./libwebsockets/build/include")
   include_directories("C:/OpenSSL-Win32/include")
 
