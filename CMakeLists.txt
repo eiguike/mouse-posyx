@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 
 project(mouse-posyx C)
 
-add_library(Mouse STATIC library/mouse.c)
 add_library(Server STATIC library/server.c)
 add_library(ServerMouse STATIC library/protocols/mouse_protocol.c)
 add_library(ServerHTTP STATIC library/protocols/http_protocol.c)
@@ -19,6 +18,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/example.html
 
 if(UNIX)
   add_library(Keyboard STATIC library/keyboard_linux.c)
+  add_library(Mouse STATIC library/mouse_linux.c)
 
   target_link_libraries(Mouse X11)
   target_link_libraries(Keyboard Xtst)
@@ -28,6 +28,7 @@ if(UNIX)
 endif()
 
 if(WIN32)
+  add_library(Mouse STATIC library/mouse_windows.c)
   include_directories("./libwebsockets/build/include")
   include_directories("C:/OpenSSL-Win32/include")
 
