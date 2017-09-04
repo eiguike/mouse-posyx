@@ -41,6 +41,10 @@
   </style>
 
   <body>
+    <div id="keyboard_div">
+      <input id="keyboard_input" type="text">
+      <div id="log"></div>
+    </div>
     <div id="touchpad"></div>
     <div class="lokura">
       <div id="left_click" class="div_click"></div>
@@ -127,6 +131,29 @@
       var value2 = Math.floor(Math.random() * 1080);
       socket.send(value1+"@"+value2);
     }
+  }
+
+
+  var socket_keyboard = new WebSocket( "ws://" + document.domain + ':' + location.port, "keyboard-protocol" );
+  socket_keyboard.onopen = function() { console.log("socket open");}
+  socket_keyboard.onclose = function() { console.log("socket close");}
+  socket_keyboard.onmessage = function(msg) { console.log("socket message: " + msg.data); }
+
+  var keyboard_input = document.querySelector("#keyboard_input");
+  keyboard_input.addEventListener("keyup", test, false);
+
+  function test(e){
+    platform = document.querySelector("#log");
+    platform.innerHTML = e.keyCode;
+    if(e.key === "Unidentified") {
+      console.log(e.keyCode);
+      socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1));
+      keyboard_input.value = "";
+    } else {
+      console.log(e.keyCode + "HEUHEUHE");
+      socket_keyboard.send("PRESS@"+e.key);
+    }
+    keyboard_input.value = "";
   }
 </script>
 </html>
