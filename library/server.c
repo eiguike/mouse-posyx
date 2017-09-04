@@ -18,6 +18,12 @@ struct lws_protocols protocols[] =
     0,
     EXAMPLE_RX_BUFFER_BYTES,
   },
+  {
+    "keyboard-protocol",
+    KeyboardCallback,
+    0,
+    EXAMPLE_RX_BUFFER_BYTES,
+  },
   { NULL, NULL, 0, 0 } /* terminator */
 };
 
