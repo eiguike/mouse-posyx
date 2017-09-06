@@ -41,9 +41,9 @@
   </style>
 
   <body>
-    <div id="keyboard_div">
-      <textarea id="keyboard_input" rows="5" cols="50"></textarea>
-      <input id="keyboard_input" type="button" value="Send">
+    <div id="keyboard_div" style="display: flex;">
+      <textarea id="keyboard_input" rows="5" style="width: 70%;"></textarea>
+      <input id="keyboard_input" type="button" value="Send" style="width: 30%;">
       <div id="log"></div>
     </div>
     <div id="touchpad"></div>
@@ -115,7 +115,6 @@
     if ((x != 0) || (y != 0)){
       socket.send("MOVE@"+ x + "@" + y);  
     }
-  
   }
 
   // connection parts
@@ -153,11 +152,15 @@
 
   function test(e){
     if(e.key === "Unidentified") {
-      socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1));
+      if(text_length > keyboard_input.value.length){
+        socket_keyboard.send("PRESS@"+"Backspace"+"@"+e.keyCode);
+      } else {
+        socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1)+"@"+e.key+"@"+e.keyCode);
+      }
     } else {
-      socket_keyboard.send("PRESS@"+e.key);
+      socket_keyboard.send("PRESS@"+e.key+"@"+e.keyCode);
     }
-    keyboard_input.value = "";
+    text_length = keyboard_input.value.length;
   }
 
   function firefox_working(e){
