@@ -1,5 +1,7 @@
 #include "keyboard.h"
 
+#include <string.h>
+
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
 #include <X11/keysymdef.h>
@@ -38,7 +40,7 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
   } else {
     Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
     if (isCaptalized(Input[0])) {
-      XTestFakeKeyEvent(this->Display, Keycode, True, NULL);
+      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
       XFlush(this->Display);
     }
     Keycode = XKeysymToKeycode(this->Display, XStringToKeysym(Input));
@@ -49,13 +51,13 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
     return;
   }
 
-  XTestFakeKeyEvent(this->Display, Keycode, True, NULL);
+  XTestFakeKeyEvent(this->Display, Keycode, True, 0);
   XFlush(this->Display);
-  XTestFakeKeyEvent(this->Display, Keycode, False, NULL);
+  XTestFakeKeyEvent(this->Display, Keycode, False, 0);
   XFlush(this->Display);
 
   // Disabling shift
-  XTestFakeKeyEvent(this->Display, XKeysymToKeycode(this->Display, XK_Shift_L), False, NULL);
+  XTestFakeKeyEvent(this->Display, XKeysymToKeycode(this->Display, XK_Shift_L), False, 0);
   XFlush(this->Display);
 
   printf("TypeLetterLinux end\n");
@@ -71,7 +73,7 @@ KEYBOARD * InitializeKeyboardDevice() {
   Keyboard->TypeLetter = TypeLetterLinux;
   Keyboard->Release = ReleaseKeyboardLinux;
   Keyboard->Display = XOpenDisplay(NULL);
-  Keyboard->Window = XRootWindow(Keyboard->Display, NULL);
+  Keyboard->Window = XRootWindow(Keyboard->Display, 0);
 
   return Keyboard;
 }

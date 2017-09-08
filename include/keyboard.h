@@ -15,7 +15,7 @@ typedef struct KEYBOARD_DEVICE {
 
 #ifdef LINUX
   DISPLAY * Display;
-  WINDOW * Window;
+  WINDOW Window;
 #endif
 
   void (*TypeLetter)(struct KEYBOARD_DEVICE * this, char * Input);
