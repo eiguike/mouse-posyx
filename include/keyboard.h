@@ -19,7 +19,7 @@ typedef struct KEYBOARD_DEVICE {
 #endif
 
   void (*TypeLetter)(struct KEYBOARD_DEVICE * this, char * Input);
-  void (*Release)(struct KEYBOARD_DEIVCE * this);
+  void (*Release)(struct KEYBOARD_DEVICE * this);
 } KEYBOARD;
 
 KEYBOARD * InitializeKeyboardDevice();
