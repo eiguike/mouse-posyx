@@ -11,6 +11,7 @@
 #define XK_BackSpace                     0xff08  /* Back space, back char */
 #define XK_space                         0x0020
 #define XK_Shift_L                       0xffe1  /* Left shift */
+#define XK_comma                         0x002c  /* U+002C COMMA */
 
 
 int isCaptalized(char Input) {
@@ -26,6 +27,10 @@ int isCaptalized(char Input) {
   return 0;
 }
 
+KeySym LatinStringToKeysym(char * Input) {
+  return NoSymbol;
+}
+
 void TypeLetterLinux (KEYBOARD * this, char * Input) {
   printf("TypeLetterLinux begin\n");
   printf("Letter received: %s\n", Input);
@@ -35,15 +40,26 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
     Keycode = XKeysymToKeycode(this->Display, XK_BackSpace);
   } else if (strcmp(Input, " ") == 0) {
     Keycode = XKeysymToKeycode(this->Display, XK_space);
-  } else if (strcmp(Input, "Enter") == 0) {
+  } else if (strcmp(Input, "\n") == 0) {
     Keycode = XKeysymToKeycode(this->Display, XK_KP_Enter);
   } else {
-    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-    if (isCaptalized(Input[0])) {
-      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-      XFlush(this->Display);
+    KeySym KeysymInput = XStringToKeysym(Input);
+
+    if (KeysymInput == NoSymbol) {
+      KeysymInput = LatinStringToKeysym(Input);
+
+      if (KeysymInput == NoSymbol) {
+        printf("Could not find any keysym available for this input: %s\n", Input);
+        return;
+      }
+    } else {
+      Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+      if (isCaptalized(Input[0])) {
+        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
+        XFlush(this->Display);
+      }
     }
-    Keycode = XKeysymToKeycode(this->Display, XStringToKeysym(Input));
+    Keycode = XKeysymToKeycode(this->Display, KeysymInput);
   }
 
   if (Keycode == NoSymbol) {
