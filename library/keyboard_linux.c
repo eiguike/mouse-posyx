@@ -4,31 +4,56 @@
 
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
-#include <X11/keysymdef.h>
+#include <X11/keysym.h>
 
-#define XK_KP_Space                      0xff80  /* Space */
-#define XK_KP_Enter                      0xff8d  /* Enter */
-#define XK_BackSpace                     0xff08  /* Back space, back char */
-#define XK_space                         0x0020
-#define XK_Shift_L                       0xffe1  /* Left shift */
-#define XK_comma                         0x002c  /* U+002C COMMA */
+int IsCapitalized(char * Input) {
+  printf("Letter received to compare %c\n", Input[0]);
+  printf("Input[0] >= A: %s\n", (Input[0] >= 'A' ? "True" : "False"));
+  printf("Input[0] <= Z: %s\n", (Input[0] <= 'Z' ? "True" : "False"));
+  printf("Value %d A: %d Z: %d\n", Input[0], 'A', 'Z');
 
-
-int isCaptalized(char Input) {
-  printf("Letter received to compare %c\n", Input);
-  printf("Input >= A: %s\n", (Input >= 'A' ? "True" : "False"));
-  printf("Input <= Z: %s\n", (Input <= 'Z' ? "True" : "False"));
-  printf("Value %d A: %d Z: %d\n", Input, 'A', 'Z');
-
-  if (Input >= 'A' && Input <= 'Z') {
+  if (Input[0] >= 'A' && Input[0] <= 'Z') {
+    printf("First return...\n");
     return 1;
   }
 
+  if (Input[0] >= '!' && Input[0] <= '+') {
+
+    // treating special case in pt-br keyboard
+    if (Input[0] == '\'') {
+      return 0;
+    }
+    printf("Second return...\n");
+    return 1;
+  }
+
+  if (Input[0] >= '>' && Input[0] <= '@') {
+    return 1;
+  }
+
+  if (Input[0] >= '{' && Input[0] <= '~') {
+    return 1;
+  }
+
+  if (Input[0] == '^') {
+    return 1;
+  }
+
+  if (Input[0] == ':') {
+    return 1;
+  }
   return 0;
 }
 
 KeySym LatinStringToKeysym(char * Input) {
-  return NoSymbol;
+
+  // basic set of characters
+  if (Input[0] >= 33 && Input[0] <= 126) {
+    printf("Input 0x%x\n", Input[0]);
+    return XK_exclam + (Input[0] - 33);
+  }
+
+  return XStringToKeysym(Input);
 }
 
 void TypeLetterLinux (KEYBOARD * this, char * Input) {
@@ -43,21 +68,18 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
   } else if (strcmp(Input, "\n") == 0) {
     Keycode = XKeysymToKeycode(this->Display, XK_KP_Enter);
   } else {
-    KeySym KeysymInput = XStringToKeysym(Input);
+    KeySym KeysymInput = LatinStringToKeysym(Input);
 
     if (KeysymInput == NoSymbol) {
-      KeysymInput = LatinStringToKeysym(Input);
+      printf("Could not find any keysym available for this input: %s\n", Input);
+      return;
+    }
 
-      if (KeysymInput == NoSymbol) {
-        printf("Could not find any keysym available for this input: %s\n", Input);
-        return;
-      }
-    } else {
-      Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-      if (isCaptalized(Input[0])) {
-        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-        XFlush(this->Display);
-      }
+    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+    if (IsCapitalized(Input)) {
+      printf("Shift pressed...\n");
+      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
+      XFlush(this->Display);
     }
     Keycode = XKeysymToKeycode(this->Display, KeysymInput);
   }
