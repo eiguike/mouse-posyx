@@ -42,10 +42,10 @@
 
   <body>
     <div id="keyboard_div" style="display: flex;">
-      <textarea id="keyboard_input" rows="5" style="width: 70%;"></textarea>
-      <input id="keyboard_input" type="button" value="Send" style="width: 30%;">
-      <div id="log"></div>
+      <input id="keyboard_input" autocomplete="off" rows="5" style="width: 70%;">
+      <input id="keyboard_button" type="button" value="Send" style="width: 30%;">
     </div>
+    <div id="log">QUE LOKURAAA</div>
     <div id="touchpad"></div>
     <div class="pad">
       <div id="left_click" class="div_click"></div>
@@ -147,58 +147,29 @@
   if (compatibility === 1) {
   } else {
     //keyboard_input.addEventListener("keyup", firefox_working, false);
-    keyboard_input.addEventListener("keyup", test, false);
+    //keyboard_input.addEventListener("keypress", test, false);
+    keyboard_input.addEventListener("input", test2, false);
+    keyboard_input.addEventListener("keydown", test, false);
+  }
+
+  function test2(e) {
+    if(text_length < keyboard_input.value.length){
+      socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1));
+    }
+    text_length = keyboard_input.value.length;
   }
 
   function test(e){
-    if(e.key === "Unidentified") {
-      if(text_length > keyboard_input.value.length){
-        socket_keyboard.send("PRESS@"+"Backspace"+"@"+e.keyCode);
-      } else {
-        socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1)+"@"+e.key+"@"+e.keyCode);
-      }
-    } else {
-      socket_keyboard.send("PRESS@"+e.key+"@"+e.keyCode);
-    }
-    text_length = keyboard_input.value.length;
-  }
-
-  function firefox_working(e){
     platform = document.querySelector("#log");
-
-    if ((text_length != 0)&&(text_length > keyboard_input.value.length)) {
-      platform.innerHTML = output_text + "1";
-      // backspace detected
-      socket_keyboard.send("PRESS@"+"Backspace");
-      text_length = keyboard_input.value.length;
-      output_text = "";
-      return;
-    } else if ((keyboard_input.value.length === text_length) && (text_length != 0)) {
-      // enter detected
-      if (output_text === "Enter") {
-        socket_keyboard.send("PRESS@"+"Enter");
-      }
-      platform.innerHTML = output_text + "2";
-      output_text = "Enter";
-      return;
-    }else if (keyboard_input.value.slice(-1) === " ") {
-      // space detected
-      if ((output_text === "Enter")||(output_text === " ")||(output_text === "")) {
-        socket_keyboard.send("PRESS@"+" ");
-      }
-      platform.innerHTML = output_text + "3";
-      output_text = "";
-      text_length = keyboard_input.value.length;
-      return;
-    }
-
-    if (e.key == "Unidentified") {
-      socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1));
+    platform.innerHTML = e.key;
+    if(text_length > keyboard_input.value.length){
+      socket_keyboard.send("PRESS@"+"Backspace"+"@");
     } else {
-      socket_keyboard.send("PRESS@"+e.key);
+      if (e.key === "Backspace") {
+        socket_keyboard.send("PRESS@"+"Backspace"+"@");
+      }
     }
-    text_length = keyboard_input.value.length;
-    output_text = "";
   }
+
 </script>
 </html>
