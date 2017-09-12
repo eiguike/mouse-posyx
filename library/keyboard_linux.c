@@ -13,17 +13,14 @@ int IsCapitalized(char * Input) {
   printf("Value %d A: %d Z: %d\n", Input[0], 'A', 'Z');
 
   if (Input[0] >= 'A' && Input[0] <= 'Z') {
-    printf("First return...\n");
     return 1;
   }
 
   if (Input[0] >= '!' && Input[0] <= '+') {
-
     // treating special case in pt-br keyboard
     if (Input[0] == '\'') {
       return 0;
     }
-    printf("Second return...\n");
     return 1;
   }
 
@@ -59,6 +56,13 @@ KeySym LatinStringToKeysym(char * Input) {
 void TypeLetterLinux (KEYBOARD * this, char * Input) {
   printf("TypeLetterLinux begin\n");
   printf("Letter received: %s\n", Input);
+
+  // special treatment when @ is sent
+  if (Input == NULL) {
+    char At = '@';
+    Input = &At;
+  }
+
   KeyCode Keycode = 0;
 
   if (strcmp(Input, "Backspace") == 0) {
