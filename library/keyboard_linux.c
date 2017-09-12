@@ -153,7 +153,6 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
   } else if (strcmp(Input, "\n") == 0) {
     Keycode = XKeysymToKeycode(this->Display, XK_KP_Enter);
   } else {
-
     if (strlen(Input) == 1) {
       KeySym KeysymInput = LatinStringToKeysym(Input);
 
@@ -193,12 +192,18 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
       XTestFakeKeyEvent(this->Display, Keycode, False, 0);
       XFlush(this->Display);
 
+      printf("Released shift...");
       Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
       XTestFakeKeyEvent(this->Display, Keycode, False, 0);
       XFlush(this->Display);
 
       // using another encode
       if (IsLetterCapitalized(Input)) {
+        printf("Pressing shift...\n");
+        Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
+        XFlush(this->Display);
+
         printf("Pressed A\n");
 
         Keycode = XKeysymToKeycode(this->Display, XK_A);
@@ -209,8 +214,10 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
         XTestFakeKeyEvent(this->Display, Keycode, False, 0);
         XFlush(this->Display);
 
-        // Disabling shift
-        XTestFakeKeyEvent(this->Display, XKeysymToKeycode(this->Display, XK_Shift_L), False, 0);
+        // Disabling shif
+        printf("Release shift...\n");
+        Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+        XTestFakeKeyEvent(this->Display, Keycode, False, 0);
         XFlush(this->Display);
       } else {
         printf("Released shift...\n");
