@@ -21,23 +21,251 @@ typedef enum Accent ACCENT;
 typedef struct LetterAccent {
   char * Letters;
   ACCENT Accent;
-  int Capitalized;
+  unsigned int Capitalized;
+  unsigned int Composed;
   KeySym Keysym;
-
   char * Type;
 } LETTER_ACCENT;
 
-static LETTER_ACCENT Letters[] = {
+typedef struct LetterAccentToLetter {
+  char * AccentLetters;
+  unsigned int Capitalized;
+  KeySym Letter;
+} LETTER_ACCENT_TO_LETTER;
+
+static LETTER_ACCENT_TO_LETTER AccentLettersToLetter[] = {
+  {
+    "áàãâä",
+    0,
+    XK_a
+  },
+  {
+    "ÁÀÃÂÄ",
+    1,
+    XK_A
+  },
+  {
+    "ćĉ",
+    0,
+    XK_c
+  },
+  {
+    "ĆĈ",
+    1,
+    XK_C
+  },
+  {
+    "éèẽêë",
+    0,
+    XK_e
+  },
+  {
+    "ÉÈẼÊË",
+    1,
+    XK_E
+  },
+  {
+    "ǵĝ",
+    0,
+    XK_g
+  },
+  {
+    "ǴĜ",
+    1,
+    XK_G
+  },
+  {
+    "ĥḧ",
+    0,
+    XK_h
+  },
+  {
+    "ĤḦ",
+    1,
+    XK_H
+  },
+  {
+    "íìĩîï",
+    0,
+    XK_i
+  },
+  {
+    "ÍÌĨÎÏ",
+    1,
+    XK_i
+  },
+
+  {
+    "ĵ",
+    0,
+    XK_j
+  },
+  {
+    "Ĵ",
+    1,
+    XK_J
+  },
+  {
+    "ḱ",
+    0,
+    XK_k
+  },
+  {
+    "Ḱ",
+    1,
+    XK_K
+  },
+  {
+    "ĺ",
+    0,
+    XK_l
+  },
+  {
+    "Ĺ",
+    1,
+    XK_L
+  },
+  {
+    "ḿ",
+    0,
+    XK_m
+  },
+  {
+    "Ḿ",
+    1,
+    XK_M
+  },
+  {
+    "ńǹñ",
+    0,
+    XK_n
+  },
+  {
+    "ŃǸÑ",
+    1,
+    XK_N
+  },
+  {
+    "óòõôö",
+    0,
+    XK_o
+  },
+  {
+    "ÓÒÕÔÖ",
+    1,
+    XK_O
+  },
+  {
+    "ṕ",
+    0,
+    XK_p
+  },
+  {
+    "Ṕ",
+    1,
+    XK_P
+  },
+
+  {
+    "ŕ",
+    0,
+    XK_r
+  },
+  {
+    "Ŕ",
+    1,
+    XK_R
+  },
+  {
+    "śŝ",
+    0,
+    XK_s
+  },
+  {
+    "ŚŜ",
+    1,
+    XK_S
+  },
+  {
+    "úùũûü",
+    0,
+    XK_u
+  },
+  {
+    "ÚÙŨÛÜ",
+    1,
+    XK_U
+  },
+  {
+    "ǘǜṽ",
+    0,
+    XK_v
+  },
+  {
+    "ǗǛṼ",
+    1,
+    XK_V
+  },
+  {
+    "ẍ",
+    0,
+    XK_x
+  },
+  {
+    "Ẍ",
+    1,
+    XK_X
+  },
+  {
+    "ẃẁŵẅ",
+    0,
+    XK_w
+  },
+  {
+    "ẂẀŴẄ",
+    1,
+    XK_W
+  },
+  {
+    "ỳỹŷÿ",
+    0,
+    XK_y
+  },
+  {
+    "ỲỸŶŸ",
+    1,
+    XK_Y
+  },
+  {
+    "źẑ",
+    0,
+    XK_z
+  },
+  {
+    "ŹẐ",
+    1,
+    XK_Z
+  },
+  {
+    NULL,
+    0,
+    NoSymbol
+  }
+};
+
+static LETTER_ACCENT AccentLetters[] = {
   {
     "ẃéŕýúíóṕáśǵḱĺḉźćǘńḿẂÉŔÝÚÍÓṔÁŚǴḰĹḈŹĆǗŃḾ",
     ACUTE,
     0,
+    1,
     XK_dead_acute,
     "ACUTE"
   },
   {
     "çÇ",
     CEDILLA,
+    0,
     0,
     XK_ccedilla,
     "CEDILLA"
@@ -46,12 +274,14 @@ static LETTER_ACCENT Letters[] = {
     "ŴÊŶÛÎÔÂŜĜĤĴẐĈŵêŷûîôâŝĝĥĵẑĉ",
     CIRCUMFLEX,
     1,
+    1,
     XK_dead_circumflex,
     "CIRCUMFLEX"
   },
   {
     "ẅëẗÿüïöäḧẍẄËŸÜÏÖÄḦẌ",
     DIAERESIS,
+    1,
     1,
     XK_dead_diaeresis,
     "DIAERESIS"
@@ -60,6 +290,7 @@ static LETTER_ACCENT Letters[] = {
     "ẁèỳùìòàǜǹẀÈỲÙÌÒÀǛǸ",
     GRAVE,
     1,
+    1,
     XK_dead_grave,
     "GRAVE"
   },
@@ -67,6 +298,7 @@ static LETTER_ACCENT Letters[] = {
     "ẽỹũĩõãṽñẼỸŨĨÕÃṼÑ",
     TILDE,
     0,
+    1,
     XK_dead_tilde,
     "TILDE"
   },
@@ -74,26 +306,104 @@ static LETTER_ACCENT Letters[] = {
     NULL,
     NOTHING,
     0,
+    0,
     NoSymbol,
     "NOTHING"
   }
 };
+
+KeySym GetLetterFromAccent (char * Input, unsigned int * Return) {
+  unsigned int Index = 0;
+
+  while (AccentLettersToLetter[Index].AccentLetters != NULL) {
+    if (strstr(AccentLettersToLetter[Index].AccentLetters, Input) != NULL) {
+      printf("%s\n", AccentLettersToLetter[Index].AccentLetters);
+      *Return = Index;
+      return AccentLettersToLetter[Index].Letter;
+    }
+    Index++;
+  }
+  //printf("return NULL\n");
+  *Return = Index;
+  return AccentLettersToLetter[Index].Letter;
+}
 
 ACCENT GetAccent (char * Input) {
   unsigned int Index = 0;
 
   //printf("GetAccent Input = %s\n", Input);
 
-  while(Letters[Index].Letters != NULL) {
-    //printf("%s %s\n", Letters[Index].Letters, Input);
-    if (strstr(Letters[Index].Letters, Input) != NULL) {
-      //printf("Accent returned: %d\n", Letters[Index].Accent);
-      return Letters[Index].Accent;
+  while(AccentLetters[Index].Letters != NULL) {
+    //printf("%s %s\n", AccentLetters[Index].Letters, Input);
+    if (strstr(AccentLetters[Index].Letters, Input) != NULL) {
+      //printf("Accent returned: %d\n", AccentLetters[Index].Accent);
+      return AccentLetters[Index].Accent;
     }
     Index++;
   }
 
-  return Letters[Index].Accent;
+  return AccentLetters[Index].Accent;
+}
+
+void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
+  unsigned int Index;
+  KeyCode Keycode;
+  ACCENT Acc = GetAccent(Input);
+  printf("Accent: %s\n", AccentLetters[Acc].Type);
+
+  if (Acc == NOTHING) {
+    printf("I dont know how to interpret this...\n");
+    return;
+  }
+
+  if (AccentLetters[Acc].Capitalized) {
+    printf("Accent capitalized, pressing shift...\n");
+    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+    XTestFakeKeyEvent(this->Display, Keycode, True, CurrentTime);
+  }
+
+  Keycode = XKeysymToKeycode(this->Display, AccentLetters[Acc].Keysym);
+  printf("Pressing keycode: %d\n", Keycode);
+  XTestFakeKeyEvent(this->Display, Keycode, True, CurrentTime);
+
+  Keycode = XKeysymToKeycode(this->Display, AccentLetters[Acc].Keysym);
+  printf("Releasing keycode: %d\n", Keycode);
+  XTestFakeKeyEvent(this->Display, Keycode, False, CurrentTime);
+
+  if (AccentLetters[Acc].Capitalized) {
+    printf("Releasing Shift\n");
+    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+    XTestFakeKeyEvent(this->Display, Keycode, False, CurrentTime);
+    XFlush(this->Display);
+  }
+
+  if (AccentLetters[Acc].Composed) {
+    printf("Entrei aqui...\n");
+    KeySym Keysym = GetLetterFromAccent (Input, &Index);
+    Keycode = XKeysymToKeycode(this->Display, Keysym);
+    if (Keycode != NoSymbol) {
+      if (AccentLettersToLetter[Index].Capitalized) {
+        printf("Accent capitalized, pressing shift...\n");
+        XTestFakeKeyEvent(this->Display, XKeysymToKeycode (this->Display, XK_Shift_L), True, CurrentTime);
+      }
+
+      printf("Pressing Letter: %d\n", Keycode);
+      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
+      XTestFakeKeyEvent(this->Display, Keycode, False, 0);
+      printf("Releasing Letter: %d\n", Keycode);
+
+      if (AccentLettersToLetter[Index].Capitalized) {
+        printf("Accent capitalized, releasing shift...\n");
+        XTestFakeKeyEvent(this->Display, XKeysymToKeycode (this->Display, XK_Shift_L), False, CurrentTime);
+      }
+    } else {
+      printf("I don't know how to handle this character %s\n", Input);
+    }
+  }
+
+  XFlush(this->Display);
+  printf("Finish...\n");
+  return;
 }
 
 int IsLetterCapitalized(char * Input) {
@@ -152,93 +462,24 @@ void TypeLetterLinux (KEYBOARD * this, char * Input) {
     Keycode = XKeysymToKeycode(this->Display, XK_space);
   } else if (strcmp(Input, "\n") == 0) {
     Keycode = XKeysymToKeycode(this->Display, XK_KP_Enter);
-  } else {
-    if (strlen(Input) == 1) {
-      KeySym KeysymInput = LatinStringToKeysym(Input);
+  } else if (strlen(Input) > 1) {
+    TypeComplicatedLetter (this, Input);
+    return;
+  } else if (strlen(Input) == 1) {
+    KeySym KeysymInput = LatinStringToKeysym(Input);
 
-      if (KeysymInput == NoSymbol) {
-        printf("Could not find any keysym available for this input: %s\n", Input);
-        return;
-      }
-
-      Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-      if (IsLetterCapitalized(Input)) {
-        printf("Shift pressed...\n");
-        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-        XFlush(this->Display);
-      }
-      Keycode = XKeysymToKeycode(this->Display, KeysymInput);
-    } else {
-      ACCENT Acc = GetAccent(Input);
-      printf("Accent: %s\n", Letters[Acc].Type);
-
-      if (Acc == NOTHING) {
-        printf("I dont know how to interpret this...\n");
-        return;
-      }
-
-      if (Letters[Acc].Capitalized) {
-        printf("Pressed shift...\n");
-        Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-        XFlush(this->Display);
-      }
-
-      Keycode = XKeysymToKeycode(this->Display, Letters[Acc].Keysym);
-      printf("Pressed Keycode %d\n", Keycode);
-      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-      XFlush(this->Display);
-      printf("Released Keycode %d\n", Keycode);
-      XTestFakeKeyEvent(this->Display, Keycode, False, 0);
-      XFlush(this->Display);
-
-      printf("Released shift...");
-      Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-      XTestFakeKeyEvent(this->Display, Keycode, False, 0);
-      XFlush(this->Display);
-
-      // using another encode
-      if (IsLetterCapitalized(Input)) {
-        printf("Pressing shift...\n");
-        Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-        XFlush(this->Display);
-
-        printf("Pressed A\n");
-
-        Keycode = XKeysymToKeycode(this->Display, XK_A);
-        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-        XFlush(this->Display);
-
-        printf("Released A\n");
-        XTestFakeKeyEvent(this->Display, Keycode, False, 0);
-        XFlush(this->Display);
-
-        // Disabling shif
-        printf("Release shift...\n");
-        Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-        XTestFakeKeyEvent(this->Display, Keycode, False, 0);
-        XFlush(this->Display);
-      } else {
-        printf("Released shift...\n");
-        // Disabling shift
-        XTestFakeKeyEvent(this->Display, XKeysymToKeycode(this->Display, XK_Shift_L), False, 0);
-        XFlush(this->Display);
-
-        printf("Pressed A\n");
-
-        Keycode = XKeysymToKeycode(this->Display, XK_A);
-        XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-        XFlush(this->Display);
-
-        printf("Released A\n");
-        XTestFakeKeyEvent(this->Display, Keycode, False, 0);
-        XFlush(this->Display);
-      }
-
-      printf("I don't know how to handle this kind of letter :(\n");
+    if (KeysymInput == NoSymbol) {
+      printf("Could not find any keysym available for this input: %s\n", Input);
       return;
     }
+
+    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
+    if (IsLetterCapitalized(Input)) {
+      printf("Shift pressed...\n");
+      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
+      XFlush(this->Display);
+    }
+    Keycode = XKeysymToKeycode(this->Display, KeysymInput);
   }
 
   if (Keycode == NoSymbol) {
