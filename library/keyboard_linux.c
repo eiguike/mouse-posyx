@@ -479,6 +479,29 @@ void ReleaseKeyboardLinux (KEYBOARD * this) {
 KEYBOARD * InitializeKeyboardDevice() {
   KEYBOARD * Keyboard = (KEYBOARD*)malloc(sizeof(KEYBOARD));
 
+  ///////////////////////////////////////////////////
+  // little fix to set to Xlib the correct layout //
+  //////////////////////////////////////////////////
+  FILE *ListLayout = popen("setxkbmap -query | grep layout", "r");
+  char Buffer[256];
+  char Layout[10];
+
+  while (fgets(Buffer, sizeof(Buffer), ListLayout) != 0) {
+    strtok(Buffer, "     ");
+    strcpy(Layout, strtok(NULL, "     "));
+  }
+  pclose(ListLayout);
+  printf("Keyboard layout: %s", Layout);
+
+  memset(Buffer, 0, 256);
+  strcat(Buffer, "setxkbmap ");
+  strcat(Buffer, Layout);
+  system(Buffer);
+  printf("Setting Keyboard Layout to: %s\n", Layout);
+  // https://bugs.launchpad.net/ubuntu/+source/xorg-server/+bug/837456
+  ///////////////////////////////////////////////////
+  ///////////////////////////////////////////////////
+
   Keyboard->TypeLetter = TypeLetterLinux;
   Keyboard->Release = ReleaseKeyboardLinux;
   Keyboard->Display = XOpenDisplay(NULL);
