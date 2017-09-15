@@ -16,12 +16,10 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/example.html
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(UNIX)
-  add_library(KeyboardUnicode STATIC library/keyboard/keyboard_letters_linux.c)
   add_library(Keyboard STATIC library/keyboard_linux.c)
   add_library(Mouse STATIC library/mouse_linux.c)
 
   target_link_libraries(Mouse X11)
-  target_link_libraries(Keyboard KeyboardUnicode)
   target_link_libraries(Keyboard Xtst)
   target_link_libraries(Server websockets)
 
