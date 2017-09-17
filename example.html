@@ -21,7 +21,7 @@
     background-color: gray;
   }
 
-  .lokura {
+  .pad {
     display: flex;
     flex-flow: row wrap;
   }
@@ -41,8 +41,12 @@
   </style>
 
   <body>
+    <div id="keyboard_div" style="display: flex;">
+      <textarea id="keyboard_input" autocomplete="off" rows="5" style="width: 100%;"></textarea>
+    </div>
+    <div id="log">QUE LOKURAAA</div>
     <div id="touchpad"></div>
-    <div class="lokura">
+    <div class="pad">
       <div id="left_click" class="div_click"></div>
       <div id="right_click" class="div_click"></div>
     </div>
@@ -110,7 +114,6 @@
     if ((x != 0) || (y != 0)){
       socket.send("MOVE@"+ x + "@" + y);  
     }
-  
   }
 
   // connection parts
@@ -128,5 +131,48 @@
       socket.send(value1+"@"+value2);
     }
   }
+
+
+  var socket_keyboard = new WebSocket( "ws://" + document.domain + ':' + location.port, "keyboard-protocol" );
+  socket_keyboard.onopen = function() { console.log("socket open");}
+  socket_keyboard.onclose = function() { console.log("socket close");}
+  socket_keyboard.onmessage = function(msg) { console.log("socket message: " + msg.data); }
+
+  var keyboard_input = document.querySelector("#keyboard_input");
+  var compatibility = 0;
+  var text_length = 0;
+  var output_text = "";
+
+  if (compatibility === 1) {
+  } else {
+    //keyboard_input.addEventListener("keyup", firefox_working, false);
+    //keyboard_input.addEventListener("keypress", test, false);
+    keyboard_input.addEventListener("input", test2, false);
+    //keyboard_input.addEventListener("keydown", test, false);
+  }
+
+  function test2(e) {
+    keyboard_input.removeEventListener("keydown", test, false);
+    if(text_length < keyboard_input.value.length){
+      socket_keyboard.send("PRESS@"+keyboard_input.value.slice(-1));
+    } else if (text_length > keyboard_input.value.length) {
+      socket_keyboard.send("PRESS@"+"Backspace");
+    }
+
+    text_length = keyboard_input.value.length;
+
+    if (text_length === 0) {
+      keyboard_input.addEventListener("keydown", test, false);
+    }
+  }
+
+  function test(e){
+    platform = document.querySelector("#log");
+    platform.innerHTML = e.key;
+    if((text_length === 0) || (e.key === "Backspace")){
+      socket_keyboard.send("PRESS@"+"Backspace"+"@");
+    }
+  }
+
 </script>
 </html>

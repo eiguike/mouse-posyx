@@ -5,9 +5,15 @@
 
 #include "protocols/http_protocol.h"
 #include "protocols/mouse_protocol.h"
+#include "protocols/keyboard_protocol.h"
 
 #define EXAMPLE_RX_BUFFER_BYTES (50)
 #define NUMBERS_OF_PROTOCOLS 2
+
+typedef struct PROTOCOL_MAPPING {
+	char * Command;
+	void (*ExecuteCommand)();
+} COMMAND_MAPPING;
 
 int callback_mouse(struct lws *wsi,
                    enum lws_callback_reasons reason,
