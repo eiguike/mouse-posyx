@@ -23,6 +23,10 @@ enum Accent {
 
 typedef enum Accent ACCENT;
 
+#ifdef WINDOWS
+typedef unsigned int KeySym;
+#endif
+
 typedef struct LetterAccent {
   char * Letters;
   ACCENT Accent;
