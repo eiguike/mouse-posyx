@@ -389,8 +389,12 @@ int IsLetterCapitalized(char * Input) {
       if (Input[0] == '\'') return 0;
       return 1;
     }
+
+    if (Input[0] == '<') return 1;
+    if (Input[0] == '_') return 1;
+
     if (Input[0] >= '>' && Input[0] <= '@') return 1;
-    if (Input[0] >= '{' && Input[0] <= '~') return 1;
+    if (Input[0] >= '{' && Input[0] < '~') return 1;
     if (Input[0] == '^') return 1;
     if (Input[0] == ':') return 1;
   } else {
@@ -403,22 +407,95 @@ int IsLetterCapitalized(char * Input) {
   return 0;
 }
 
-/*
 KeySym LatinStringToKeysym(char * Input) {
+  if (Input[0] >= 'a' && Input[0] <= 'z') return 0x41 + Input[0] - 97;
+  if (Input[0] >= 'A' && Input[0] <= 'Z') return 0x41 + Input[0] - 65;
 
-  // basic set of characters
-  if (Input[0] >= 33 && Input[0] <= 126) {
-    printf("Input 0x%x\n", Input[0]);
-    return XK_exclam + (Input[0] - 33);
+  switch(Input[0]) {
+    case '!':
+    case '1':
+      return 49;
+    case '@':
+    case '2':
+      return 50;
+    case '#':
+    case '3':
+      return 51;
+    case '$':
+    case '4':
+      return 52;
+    case '%':
+    case '5':
+      return 53;
+    case '6':
+    case '¨':
+      return 53;
+    case '&':
+    case '7':
+      return 55;
+    case '*':
+    case '8':
+      return 56;
+    case '(':
+    case '9':
+      return 57;
+    case ')':
+    case '0':
+      return 48;
+    case '-':
+    case '_':
+      return 189;
+    case '+':
+    case '=':
+      return 187;
+
+    case '\'':
+    case '"':
+      return 192;
+    case '´':
+    case '`':
+      return 219;
+    case '{':
+    case '[':
+      return 221;
+    case '}':
+    case ']':
+      return 220;
+    case '~':
+    case '^':
+      return 222;
+    case '?':
+    case '/':
+      return 193;
+    case ':':
+    case ';':
+      return 191;
+    case '.':
+    case '>':
+      return 190;                        
+    case ',':
+    case '<':
+      return 188;                        
+    case '\\':
+    case '|':
+      return 226;                                          
+    default:
+      break;
   }
 
-  return XStringToKeysym(Input);
-}*/
+  return NoSymbol;
+}
 
 
 void TypeLetterWindows (KEYBOARD * this, char * Input) {
   printf("TypeLetterWindows begin\n");
   printf("Letter received: %s\n", Input);
+
+  // special treatment when @ is sent
+  if (Input == NULL) {
+    char At = '@';
+    Input = &At;
+  }
 
   INPUT InputCommand;
 
@@ -429,9 +506,9 @@ void TypeLetterWindows (KEYBOARD * this, char * Input) {
     InputCommand.ki.wVk = 0x08;
   } else if (strcmp(Input, " ") == 0) {
     InputCommand.ki.wVk = 0x20;
-  } else if (strcmp(Input, "Enter") == 0) {
+  } else if (strcmp(Input, "\n") == 0) {
     InputCommand.ki.wVk = 0x0D;
-  } else {
+  } else if (strlen(Input) == 1) {
   	printf("Valor: %d\n", Input[0]);
 
     if (IsLetterCapitalized (Input)) {
@@ -439,12 +516,21 @@ void TypeLetterWindows (KEYBOARD * this, char * Input) {
       InputCommand.ki.wVk = 0x10; //shift
       SendInput(1, &InputCommand, sizeof(INPUT));
     }
-    InputCommand.ki.wVk = 0x41 + Input[0];
+    InputCommand.ki.wVk = LatinStringToKeysym(Input);
+
+    if (InputCommand.ki.wVk == NoSymbol) {
+      printf("I don't know how to interpret this command!\n");
+      goto RELEASE_SHIFT;
+    }
+  } else if (strlen(Input) > 1) {
+    printf("INPUT Unknown %s\n", Input);
+    goto RELEASE_SHIFT;
   }
 
   //pressing button
   SendInput(1, &InputCommand, sizeof(INPUT));
 
+RELEASE_SHIFT:
   // release shift
   InputCommand.ki.wVk = 0x10; //shift
   InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
