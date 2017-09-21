@@ -282,99 +282,110 @@ static LETTER_ACCENT AccentLetters[] = {
   }
 };
 
-//KeySym GetLetterFromAccent (char * Input, unsigned int * Return) {
-//  unsigned int Index = 0;
-//
-//  while (AccentLettersToLetter[Index].AccentLetters != NULL) {
-//    if (strstr(AccentLettersToLetter[Index].AccentLetters, Input) != NULL) {
-//      printf("%s\n", AccentLettersToLetter[Index].AccentLetters);
-//      *Return = Index;
-//      return AccentLettersToLetter[Index].Letter;
-//    }
-//    Index++;
-//  }
-//  //printf("return NULL\n");
-//  *Return = Index;
-//  return AccentLettersToLetter[Index].Letter;
-//}
-//
-//ACCENT GetAccent (char * Input) {
-//  unsigned int Index = 0;
-//
-//  printf("GetAccent Input = %s\n", Input);
-//
-//  while(AccentLetters[Index].Letters != NULL) {
-//    printf("%s %s\n", AccentLetters[Index].Letters, Input);
-//    if (strstr(AccentLetters[Index].Letters, Input) != NULL) {
-//      printf("Accent returned: %d\n", AccentLetters[Index].Accent);
-//      return AccentLetters[Index].Accent;
-//    }
-//    Index++;
-//  }
-//
-//  return AccentLetters[Index].Accent;
-//}
-//
-//void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
-//  unsigned int Index;
-//  KeyCode Keycode;
-//  ACCENT Acc = GetAccent(Input);
-//  printf("Accent: %s\n", AccentLetters[Acc].Type);
-//
-//  if (Acc == NOTHING) {
-//    printf("I dont know how to interpret this...\n");
-//    return;
-//  }
-//
-//  if (AccentLetters[Acc].Capitalized) {
-//    printf("Accent capitalized, pressing shift...\n");
-//    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-//    XTestFakeKeyEvent(this->Display, Keycode, True, CurrentTime);
-//  }
-//
-//  Keycode = XKeysymToKeycode(this->Display, AccentLetters[Acc].Keysym);
-//  printf("Pressing keycode: %d\n", Keycode);
-//  XTestFakeKeyEvent(this->Display, Keycode, True, CurrentTime);
-//
-//  Keycode = XKeysymToKeycode(this->Display, AccentLetters[Acc].Keysym);
-//  printf("Releasing keycode: %d\n", Keycode);
-//  XTestFakeKeyEvent(this->Display, Keycode, False, CurrentTime);
-//
-//  if (AccentLetters[Acc].Capitalized) {
-//    printf("Releasing Shift\n");
-//    Keycode = XKeysymToKeycode(this->Display, XK_Shift_L);
-//    XTestFakeKeyEvent(this->Display, Keycode, False, CurrentTime);
-//    XFlush(this->Display);
-//  }
-//
-//  if (AccentLetters[Acc].Composed) {
-//    printf("Entrei aqui...\n");
-//    KeySym Keysym = GetLetterFromAccent (Input, &Index);
-//    Keycode = XKeysymToKeycode(this->Display, Keysym);
-//    if (Keycode != NoSymbol) {
-//      if (AccentLettersToLetter[Index].Capitalized) {
-//        printf("Accent capitalized, pressing shift...\n");
-//        XTestFakeKeyEvent(this->Display, XKeysymToKeycode (this->Display, XK_Shift_L), True, CurrentTime);
-//      }
-//
-//      printf("Pressing Letter: %d\n", Keycode);
-//      XTestFakeKeyEvent(this->Display, Keycode, True, 0);
-//      XTestFakeKeyEvent(this->Display, Keycode, False, 0);
-//      printf("Releasing Letter: %d\n", Keycode);
-//
-//      if (AccentLettersToLetter[Index].Capitalized) {
-//        printf("Accent capitalized, releasing shift...\n");
-//        XTestFakeKeyEvent(this->Display, XKeysymToKeycode (this->Display, XK_Shift_L), False, CurrentTime);
-//      }
-//    } else {
-//      printf("I don't know how to handle this character %s\n", Input);
-//    }
-//  }
-//
-//  XFlush(this->Display);
-//  printf("Finish...\n");
-//  return;
-//}
+KeySym GetLetterFromAccent (char * Input, unsigned int * Return) {
+  unsigned int Index = 0;
+
+  while (AccentLettersToLetter[Index].AccentLetters != NULL) {
+    if (strstr(AccentLettersToLetter[Index].AccentLetters, Input) != NULL) {
+      printf("%s\n", AccentLettersToLetter[Index].AccentLetters);
+      *Return = Index;
+      return AccentLettersToLetter[Index].Letter;
+    }
+    Index++;
+  }
+  printf("return NULL\n");
+  *Return = Index;
+  return AccentLettersToLetter[Index].Letter;
+}
+
+ACCENT GetAccent (char * Input) {
+  unsigned int Index = 0;
+
+  printf("GetAccent Input = %s\n", Input);
+
+  while(AccentLetters[Index].Letters != NULL) {
+    printf("%s %s\n", AccentLetters[Index].Letters, Input);
+    if (strstr(AccentLetters[Index].Letters, Input) != NULL) {
+      printf("Accent returned: %d\n", AccentLetters[Index].Accent);
+      return AccentLetters[Index].Accent;
+    }
+    Index++;
+  }
+
+  return AccentLetters[Index].Accent;
+}
+
+void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
+  unsigned int Index = 0;
+  KeyCode Keycode;
+  ACCENT Acc = GetAccent(Input);
+  printf("Accent: %s\n", AccentLetters[Acc].Type);
+
+  if (Acc == NOTHING) {
+    printf("I dont know how to interpret this...\n");
+    return;
+  }
+
+  INPUT InputCommand;
+  memset(&InputCommand, 0, sizeof(InputCommand));
+  InputCommand.type = INPUT_KEYBOARD;
+  if (AccentLetters[Acc].Capitalized) {
+    printf("Accent capitalized, pressing shift...\n");
+    InputCommand.ki.wVk = 0x10; // shift
+    InputCommand.ki.dwFlags = 0;
+    SendInput(1, &InputCommand, sizeof(INPUT));
+  }
+
+  InputCommand.ki.wVk = AccentLetters[Acc].Keysym;
+  InputCommand.ki.dwFlags = 0;
+  printf("Pressing keycode: %d Acc %d\n", InputCommand.ki.wVk, Acc);
+  SendInput(1, &InputCommand, sizeof(INPUT));
+  
+
+  InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
+  printf("Releasing keycode: %d\n", InputCommand.ki.wVk);
+  SendInput(1, &InputCommand, sizeof(INPUT));
+
+  if (AccentLetters[Acc].Capitalized) {
+    printf("Releasing Shift\n");
+    InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
+    InputCommand.ki.wVk = 0x10; // shift
+    SendInput(1, &InputCommand, sizeof(INPUT));
+  }
+
+  if (AccentLetters[Acc].Composed) {
+    printf("Entrei aqui...\n");
+    Keycode = GetLetterFromAccent (Input, &Index);
+    if (Keycode != NoSymbol) {
+      if (AccentLettersToLetter[Index].Capitalized) {
+        printf("Accent capitalized, pressing shift...\n");
+        InputCommand.ki.wVk = 0x10; // shift
+        InputCommand.ki.dwFlags = 0;
+        SendInput(1, &InputCommand, sizeof(INPUT));
+      }
+
+      printf("Pressing Letter: %d\n", Keycode);
+      InputCommand.ki.wVk = Keycode;
+      InputCommand.ki.dwFlags = 0;
+      SendInput(1, &InputCommand, sizeof(INPUT));
+      InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
+      SendInput(1, &InputCommand, sizeof(INPUT));
+      printf("Releasing Letter: %d\n", Keycode);
+
+      if (AccentLettersToLetter[Index].Capitalized) {
+        InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
+        InputCommand.ki.wVk = 0x10; // shift
+        SendInput(1, &InputCommand, sizeof(INPUT));
+        printf("Accent capitalized, releasing shift...\n");
+      }
+    } else {
+      printf("I don't know how to handle this character %s\n", Input);
+    }
+  }
+
+  printf("Finish...\n");
+  return;
+}
 
 int IsLetterCapitalized(char * Input) {
   if (strlen(Input) == 1) {
@@ -523,8 +534,8 @@ void TypeLetterWindows (KEYBOARD * this, char * Input) {
       goto RELEASE_SHIFT;
     }
   } else if (strlen(Input) > 1) {
-    printf("INPUT Unknown %s\n", Input);
-    goto RELEASE_SHIFT;
+    TypeComplicatedLetter(this, Input);
+    goto FINISH;
   }
 
   //pressing button
@@ -535,7 +546,7 @@ RELEASE_SHIFT:
   InputCommand.ki.wVk = 0x10; //shift
   InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
   SendInput(1, &InputCommand, sizeof(INPUT));
-  
+FINISH:  
   printf("TypeLetterWindows end\n");
 }
 
