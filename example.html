@@ -57,6 +57,8 @@
   var touchpad_html = document.querySelector("#touchpad");
   var left_html = document.querySelector("#left_click");
   var right_html = document.querySelector("#right_click");
+  var last_action = ""
+  var timer = new Date();
 
   touchpad_html.addEventListener("touchstart", touchStart, false);
   touchpad_html.addEventListener("touchend", touchEnd, false);
@@ -88,15 +90,26 @@
   }
 
   function touchStart(e) {
+    last_action = "";
     e.target.addEventListener("touchmove", touchMoved, false);
     position.initial_x = e.targetTouches[0].clientX;
     position.initial_y = e.targetTouches[0].clientY;
+
+    timer = new Date().getTime();
   }
 
   function touchEnd(e) {
     e.target.removeEventListener("touchmove", touchMoved, false);
     position.initial_x = 0;
     position.initial_y = 0;
+
+    if (last_action === "") {
+      var actual_timer = new Date();
+      if (actual_timer.getTime() - timer < 500) {
+        leftClickEvent(e);  
+        leftReleaseClickEvent(e);  
+      }
+    }
   }
 
   function touchMoved(e) {
@@ -112,7 +125,8 @@
     y = Math.floor(final_y * sensivity);
 
     if ((x != 0) || (y != 0)){
-      socket.send("MOVE@"+ x + "@" + y);  
+      socket.send("MOVE@"+ x + "@" + y);
+      last_action = "MOVE";
     }
   }
 
