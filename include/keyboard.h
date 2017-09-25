@@ -25,6 +25,7 @@ typedef enum Accent ACCENT;
 
 #ifdef WINDOWS
 typedef unsigned int KeySym;
+typedef unsigned int KeyCode;
 #endif
 
 typedef struct LetterAccent {
