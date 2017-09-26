@@ -40,5 +40,6 @@ typedef struct WEBSOCKET_SERVER {
 int Start (SERVER * this);
 int Stop (SERVER * this);
 SERVER * InitializeServer(int Port);
+SERVER * InitializeServerSSL(int Port);
 
 #endif
