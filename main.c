@@ -5,8 +5,6 @@
 #include "keyboard.h"
 #include "server.h"
 
-#define USE_SSL
-
 MOUSE * gMouse = NULL;
 KEYBOARD * gKeyboard = NULL;
 

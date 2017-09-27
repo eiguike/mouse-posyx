@@ -77,16 +77,17 @@ FAIL:
 
 SERVER * InitializeServerSSL(int Port) {
   printf("Using SSL\n");
+  
   int Options = 0;
-  char cert_path[1024] = "cert.pem";
-  char key_path[1024] = "key.pem";
-  char ca_path[1024] = "";
+  char cert_path[1024] = "./libwebsockets-test-server.pem";
+  char key_path[1024] = "./libwebsockets-test-server.key.pem";
+  char ca_path[1024] = ".";
 
-//#ifdef USE_SSL
   Options |= LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
   Options |= LWS_SERVER_OPTION_REDIRECT_HTTP_TO_HTTPS;
-  Options |= LWS_SERVER_OPTION_REQUIRE_VALID_OPENSSL_CLIENT_CERT;
-//#endif
+
+  Options |= LWS_SERVER_OPTION_VALIDATE_UTF8;
+  Options |= LWS_SERVER_OPTION_EXPLICIT_VHOSTS;
 
   struct lws_context_creation_info ContextInfo;
 
@@ -95,7 +96,6 @@ SERVER * InitializeServerSSL(int Port) {
   ContextInfo.ssl_cert_filepath = cert_path;
   ContextInfo.ssl_private_key_filepath = key_path;
   ContextInfo.ssl_ca_filepath = ca_path;
-
   ContextInfo.port = Port;
   ContextInfo.protocols = protocols;
   ContextInfo.gid = -1;
@@ -118,6 +118,9 @@ SERVER * InitializeServerSSL(int Port) {
   //Server->ContextInfo = ContextInfo;
   struct lws_context * Context = lws_create_context(&ContextInfo);
   struct lws_vhost * VirtualHost = lws_create_vhost(Context, &ContextInfo);
+
+  ContextInfo.port++;
+
   lws_init_vhost_client_ssl(&ContextInfo, VirtualHost);
 
   while(1) {
