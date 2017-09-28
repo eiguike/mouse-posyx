@@ -19,18 +19,32 @@ This application is possible to control your mouse and keyboard throught any mod
 
 ### Building in Windows:
 1. Install OpenSSL, cmake and Visual Studio
+
 2. Clone this repository
 > git clone https://github.com/eiguike/mouse-posyx.git
+
 2. Build and install libwebsockets, you can read all the instructions here.
-3. In root folder:
+
+3. In root folder, create a 'build' folder
 > md build; cd build
+
+5a. Prepare the development enviroment to compile
 > cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE
+
+5b. Prepare the development enviroment to compile, with OpenSSL activated:
+> cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DUSE_SSL=TRUE
+
+6. Compile
 > nmake
-4. Move libwebsockets.dll to build folder.
-5. Execute the application
+
+7. Move libwebsockets.dll to 'build' folder.
+
+8. Execute the application
 > mouse-posyx.exe
-6. Access the application throught IP:8000 in your favorite browser.
-7. Enjoy!
+
+9. Access the application throught IP:8000 in your favorite browser.
+
+10. Enjoy!
 
 
 ---
