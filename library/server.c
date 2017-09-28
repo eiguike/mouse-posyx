@@ -5,13 +5,6 @@
 
 struct lws_protocols protocols[] =
 {
-  /* The first protocol must always be the HTTP handler */
-  {
-    "http-only",   /* name */
-    callback_http, /* callback */
-    0,             /* No per session data. */
-    0,             /* max frame size / rx buffer */
-  },
   {
     "mouse-protocol",
     callback_mouse,
