@@ -50,6 +50,10 @@
       <div id="left_click" class="div_click"></div>
       <div id="right_click" class="div_click"></div>
     </div>
+    <div id="input">
+      <input type="text" id="ip_address">
+      <input type="submit" onclick="initialize_socket()" value="Submit">
+    </div>
   </body>
 
 <script>
@@ -131,10 +135,15 @@
   }
 
   // connection parts
-  var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "mouse-protocol" );
-  socket.onopen = function() { console.log("socket open");}
-  socket.onclose = function() { console.log("socket close");}
-  socket.onmessage = function(msg) { console.log("socket message: " + msg.data); }
+  //var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "mouse-protocol" );
+  //socket.onopen = function() { console.log("socket open");}
+  //socket.onclose = function() { console.log("socket close");}
+  //socket.onmessage = function(msg) { console.log("socket message: " + msg.data); }
+  var socket;
+  function initialize_socket() {
+    ip_address = document.getElementById("ip_address").value;
+    socket = new WebSocket("wss://" + ip_address + ":8000", "mouse-protocol");
+  }
 
   function stress_test() {
     var limit = 100000;
@@ -147,10 +156,10 @@
   }
 
 
-  var socket_keyboard = new WebSocket( "ws://" + document.domain + ':' + location.port, "keyboard-protocol" );
-  socket_keyboard.onopen = function() { console.log("socket open");}
-  socket_keyboard.onclose = function() { console.log("socket close");}
-  socket_keyboard.onmessage = function(msg) { console.log("socket message: " + msg.data); }
+  //var socket_keyboard = new WebSocket( "ws://" + document.domain + ':' + location.port, "keyboard-protocol" );
+  //socket_keyboard.onopen = function() { console.log("socket open");}
+  //socket_keyboard.onclose = function() { console.log("socket close");}
+  //socket_keyboard.onmessage = function(msg) { console.log("socket message: " + msg.data); }
 
   var keyboard_input = document.querySelector("#keyboard_input");
   var compatibility = 0;
