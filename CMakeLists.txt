@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(mouse-posyx C)
 
 add_library(Server STATIC library/server.c)
+add_library(ServerHTTP STATIC library/protocols/http_protocol.c)
 add_library(ServerMouse STATIC library/protocols/mouse_protocol.c)
 add_library(ServerKeyboard STATIC library/protocols/keyboard_protocol.c)
 
@@ -10,6 +11,9 @@ include_directories("./include")
 
 set(SOURCE_FILES main.c)
 add_executable(mouse-posyx ${SOURCE_FILES})
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/index.html
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(UNIX)
   add_library(Keyboard STATIC library/keyboard_linux.c)
@@ -44,6 +48,7 @@ else()
   MESSAGE("SSL IS DEACTIVATED")
 endif()
 
+target_link_libraries(Server ServerHTTP)
 target_link_libraries(Server ServerMouse)
 target_link_libraries(Server ServerKeyboard)
 target_link_libraries(mouse-posyx Server)
