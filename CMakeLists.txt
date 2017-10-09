@@ -27,8 +27,12 @@ if(WIN32)
   add_library(Keyboard STATIC library/keyboard_windows.c)
   add_library(Mouse STATIC library/mouse_windows.c)
 
-  include_directories("./libwebsockets/build/include")
+  include_directories("./libwebsockets/build")
+  include_directories("./libwebsockets/lib")
   include_directories("C:/OpenSSL-Win32/include")
+
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/bin/websockets.dll
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
   target_link_libraries(Server "${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/lib/Release/*.lib")
 
