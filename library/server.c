@@ -2,14 +2,15 @@
 #include <string.h>
 
 #include "server.h"
+#include "protocols/http_protocol.h"
 
 struct lws_protocols protocols[] =
 {
   {
     "http-protocol",
-    CallbackHttp,
-    0,
-    0
+		callback_http,
+		sizeof (per_session_data__http),
+		0,
   },
   {
     "mouse-protocol",

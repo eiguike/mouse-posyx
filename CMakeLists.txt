@@ -4,6 +4,7 @@ project(mouse-posyx C)
 
 add_library(Server STATIC library/server.c)
 add_library(ServerHTTP STATIC library/protocols/http_protocol.c)
+#add_library(ServerHTTP STATIC library/protocols/http_protocol_old.c)
 add_library(ServerMouse STATIC library/protocols/mouse_protocol.c)
 add_library(ServerKeyboard STATIC library/protocols/keyboard_protocol.c)
 
@@ -22,6 +23,7 @@ if(UNIX)
   target_link_libraries(Mouse X11)
   target_link_libraries(Keyboard Xtst)
   target_link_libraries(Server websockets)
+
 
   add_definitions(-DLINUX)
   MESSAGE("Building for Linux")
