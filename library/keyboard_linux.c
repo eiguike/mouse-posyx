@@ -351,7 +351,7 @@ void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
   }
 
   if (AccentLetters[Acc].Composed) {
-    printf("Entrei aqui...\n");
+    printf("AccentLetters Composed == TRUE\n");
     KeySym Keysym = GetLetterFromAccent (Input, &Index);
     Keycode = XKeysymToKeycode(this->Display, Keysym);
     if (Keycode != NoSymbol) {

@@ -354,7 +354,7 @@ void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
   }
 
   if (AccentLetters[Acc].Composed) {
-    printf("Entrei aqui...\n");
+    printf("AccentLetters Composed == TRUE\n");
     Keycode = GetLetterFromAccent (Input, &Index);
     if (Keycode != NoSymbol) {
       if (AccentLettersToLetter[Index].Capitalized) {
@@ -520,7 +520,7 @@ void TypeLetterWindows (KEYBOARD * this, char * Input) {
   } else if (strcmp(Input, "\n") == 0) {
     InputCommand.ki.wVk = 0x0D;
   } else if (strlen(Input) == 1) {
-  	printf("Valor: %d\n", Input[0]);
+  	printf("Value: %d\n", Input[0]);
 
     if (IsLetterCapitalized (Input)) {
       printf("Capitalized!!\n");
