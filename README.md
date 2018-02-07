@@ -1,54 +1,90 @@
 # Mouse Posyx
 ---
-This application is possible to control your mouse and keyboard throught any modern browser in smartphone, the communication is made throught LAN, its backend is developed with libwebsockets (C) and the frontend is developed with Pure Javascript and HTML.
+Control your mouse and keyboard throught your browser's smartphone.
 
-### Building in GNU/Linux:
+This application uses Websockets to create a connection between the host
+and the browser and it is compatible for Windows and Linux.
+
+### Build instructions:
+---
+<details>
+    <summary>
+- Building for Linux (Click to expand)
+    </summary>
 1. Clone this repository
-> $ git clone https://github.com/eiguike/mouse-posyx.git
-2. Build and install libwebsockets, you can read all the instructions here.
-3. In root folder:
-> $ mkdir build; cd build
-> $ cmake ..
-> $ make
+
+```
+ $ git clone https://github.com/eiguike/mouse-posyx.git
+```
+
+2. Initialize submodule folder and update it
+
+```
+ $ git submodule init; git submodule update
+```
+
+3. Build libwebsockets and install
+
+```
+ $ cd libwebsockets;mkdir build;cd build;cmake ..;make; sudo make install;
+```
+3. In mouse-posyx's folders, execute the following commands to build:
+
+```
+ $ mkdir build; cd build
+ $ cmake ..
+ $ make
+```
+
 4. Execute the application
-> $ ./mouse-posyx
+```
+$ ./mouse-posyx
+```
+
 5. Access the application throught IP:8000 in your favorite browser.
 6. Enjoy!
 
----
+</details>
 
-### Building in Windows:
+<details>
+    <summary>
+- Building for Windows (Click to expand)
+    </summary>
 1. Install OpenSSL, cmake and Visual Studio
 
 2. Clone this repository
-> git clone https://github.com/eiguike/mouse-posyx.git
 
-2. Build and install libwebsockets, you can read all the instructions here.
+3. Build and install libwebsockets, you can read all the instructions here.
 
-3. In root folder, create a 'build' folder
-> md build; cd build
+4. In root folder, create a 'build' folder
+```
+ md build; cd build
+```
 
 5a. Prepare the development enviroment to compile
-> cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE
-
+```
+ cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE
+```
 5b. Prepare the development enviroment to compile, with OpenSSL activated:
-> cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DUSE_SSL=TRUE
+```
+ cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DUSE_SSL=TRUE
+```
 
 6. Compile
-> nmake
+```
+ nmake
+```
 
 7. Move libwebsockets.dll to 'build' folder.
 
 8. Execute the application
-> mouse-posyx.exe
 
 9. Access the application throught IP:8000 in your favorite browser.
 
 10. Enjoy!
-
+</details>
 
 ---
 
 ## Author:
 @[eiguike](https://github.com/eiguike) - [rick.eihara@gmail.com](mailto:rick.eihara@gmail.com)
-
