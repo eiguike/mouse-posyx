@@ -1,0 +1,40 @@
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.keyboard-input {
+  height: 20%;
+}
+
+.touchpad {
+  height: 50%;
+  background-color: gray;
+}
+
+.container {
+  height: 100%;
+}
+
+.pad {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.mouse-buttons {
+  height: 30%;
+}
+
+.mouse-class {
+  height: 100%;
+}
+
+#left_click {
+  background-color: red;
+}
+
+#right_click {
+  background-color: yellow;
+}
+
