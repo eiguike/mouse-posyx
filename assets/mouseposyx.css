@@ -29,12 +29,3 @@ html, body {
 .mouse-class {
   height: 100%;
 }
-
-#left_click {
-  background-color: red;
-}
-
-#right_click {
-  background-color: yellow;
-}
-
