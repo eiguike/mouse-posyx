@@ -22,7 +22,7 @@
 #include "protocols/http_protocol.h"
 
 #define LWS_CB_REASON_AUX_BF__PROXY		2
-char *resource_path = "./";
+char *resource_path = "./www";
 
 /*
  * This demo server shows how to use libwebsockets for one or more
