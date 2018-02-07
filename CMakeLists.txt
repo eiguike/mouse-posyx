@@ -16,6 +16,9 @@ add_executable(mouse-posyx ${SOURCE_FILES})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/index.html
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 if(UNIX)
   add_library(Keyboard STATIC library/keyboard_linux.c)
   add_library(Mouse STATIC library/mouse_linux.c)
