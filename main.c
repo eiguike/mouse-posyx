@@ -17,6 +17,6 @@ int main() {
 #else
   SERVER * Server = InitializeServerSSL(8000);
 #endif
-  
+
   Server->Start(Server);
 }

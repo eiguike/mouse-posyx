@@ -2,9 +2,16 @@
 #include <string.h>
 
 #include "server.h"
+#include "protocols/http_protocol.h"
 
 struct lws_protocols protocols[] =
 {
+  {
+    "http-protocol",
+		callback_http,
+		sizeof (per_session_data__http),
+		0,
+  },
   {
     "mouse-protocol",
     callback_mouse,
@@ -31,18 +38,7 @@ int Start(SERVER * this) {
 }
 
 int Stop(SERVER * this) {
-  /*
-     this->IsStop = 1;
-
-     while(this->IsStop) {
-  //sleep(1);
-  }
-  lws_context_destroy(this->Context);
-  free(this->ContextInfo);
-  free(this);
-
   return 0;
-  */
 }
 
 SERVER * InitializeServer(int Port) {
@@ -70,7 +66,7 @@ FAIL:
 
 SERVER * InitializeServerSSL(int Port) {
   printf("Using SSL\n");
-  
+
   int Options = 0;
   char cert_path[1024] = "./libwebsockets-test-server.pem";
   char key_path[1024] = "./libwebsockets-test-server.key.pem";

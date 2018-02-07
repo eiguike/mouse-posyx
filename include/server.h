@@ -3,6 +3,7 @@
 
 #include <libwebsockets.h>
 
+#include "protocols/http_protocol.h"
 #include "protocols/mouse_protocol.h"
 #include "protocols/keyboard_protocol.h"
 
