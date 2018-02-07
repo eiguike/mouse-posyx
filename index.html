@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Mouse Posyx</title>
@@ -15,6 +15,10 @@
     <div class="row mouse-buttons">
       <div id="left_click" class="btn-large col s6 mouse-class">Left Click</div>
       <div id="right_click" class="btn-large col s6 mouse-class">Right Click</div>
+    </div>
+    <div id="input">
+      <input type="text" id="ip_address">
+      <input type="submit" onclick="initialize_socket()" value="Submit">
     </div>
   </body>
 </html>
