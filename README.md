@@ -1,9 +1,9 @@
 # Mouse Posyx
 ---
-Control your mouse and keyboard throught your browser's smartphone.
+Control your mouse and keyboard through your browser's smartphone.
 
 This application uses Websockets to create a connection between the host
-and the browser and it is compatible for Windows and Linux.
+and the browser and it is compatible with Windows and Linux.
 
 ### Build instructions:
 ---
@@ -41,7 +41,7 @@ and the browser and it is compatible for Windows and Linux.
 $ ./mouse-posyx
 ```
 
-5. Access the application throught IP:8000 in your favorite browser.
+5. Access the application through IP:8000 in your favorite browser.
 6. Enjoy!
 
 </details>
@@ -61,11 +61,11 @@ $ ./mouse-posyx
  md build; cd build
 ```
 
-5a. Prepare the development enviroment to compile
+5a. Prepare the development environment to compile
 ```
  cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE
 ```
-5b. Prepare the development enviroment to compile, with OpenSSL activated:
+5b. Prepare the development environment to compile, with OpenSSL activated:
 ```
  cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=RELEASE -DUSE_SSL=TRUE
 ```
@@ -79,7 +79,7 @@ $ ./mouse-posyx
 
 8. Execute the application
 
-9. Access the application throught IP:8000 in your favorite browser.
+9. Access the application through IP:8000 in your favorite browser.
 
 10. Enjoy!
 </details>
