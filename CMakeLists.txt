@@ -35,12 +35,13 @@ if(WIN32)
 
   include_directories("./libwebsockets/build")
   include_directories("./libwebsockets/lib")
+  include_directories("./libwebsockets/win32port/win32helpers")
   include_directories("C:/OpenSSL-Win32/include")
 
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/bin/websockets.dll
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-  target_link_libraries(Server "${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/lib/Release/*.lib")
+  target_link_libraries(Server "${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/lib/*.lib")
 
   add_definitions(-DWINDOWS)
   MESSAGE("Building for Windows")
