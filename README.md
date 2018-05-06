@@ -17,23 +17,33 @@ and the browser and it is compatible for Windows and Linux.
  $ git clone https://github.com/eiguike/mouse-posyx.git
 ```
 
-2. Initialize submodule folder and update it
+2. Install the prerequisites packages:
+```
+$ sudo apt install cmake zlib1g-dev libx11-dev libxtst-dev
+```
+
+3. Initialize submodule folder and update it
 
 ```
  $ git submodule init; git submodule update
 ```
 
-3. Build libwebsockets and install
+4. Build libwebsockets and install
 
 ```
  $ cd libwebsockets;mkdir build;cd build;cmake ..;make; sudo make install;
 ```
-3. In mouse-posyx's folders, execute the following commands to build:
+4. In mouse-posyx's folders, execute the following commands to build:
 
 ```
  $ mkdir build; cd build
  $ cmake ..
  $ make
+```
+
+4. Copy libwebsockets's implementations to the proper folder
+```
+$ sudo cp /usr/local/lib/libwebsockets* /usr/lib
 ```
 
 4. Execute the application
