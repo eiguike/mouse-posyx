@@ -40,7 +40,13 @@ if(WIN32)
 
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/bin/websockets.dll
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
+  file(COPY C:/OpenSSL-Win32/libeay32.dll
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY C:/OpenSSL-Win32/libssl32.dll
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})	 
+  file(COPY C:/OpenSSL-Win32/ssleay32.dll
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+	 
   target_link_libraries(Server "${CMAKE_CURRENT_SOURCE_DIR}/libwebsockets/build/lib/*.lib")
 
   add_definitions(-DWINDOWS)
