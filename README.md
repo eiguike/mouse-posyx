@@ -94,5 +94,9 @@ $ ./mouse-posyx
 
 ---
 
+### Binaries release:
+---
+Binaries are only available for Windows, and you can download [here](https://github.com/eiguike/mouse-posyx/files/1978261/mouse-posyx_setup.zip)
+
 ## Author:
 @[eiguike](https://github.com/eiguike) - [rick.eihara@gmail.com](mailto:rick.eihara@gmail.com)
