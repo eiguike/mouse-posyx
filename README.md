@@ -33,7 +33,7 @@ $ sudo apt install cmake zlib1g-dev libx11-dev libxtst-dev
 ```
  $ cd libwebsockets;mkdir build;cd build;cmake ..;make; sudo make install;
 ```
-4. In mouse-posyx's folders, execute the following commands to build:
+5. In mouse-posyx's folders, execute the following commands to build:
 
 ```
  $ mkdir build; cd build
@@ -41,18 +41,18 @@ $ sudo apt install cmake zlib1g-dev libx11-dev libxtst-dev
  $ make
 ```
 
-4. Copy libwebsockets's implementations to the proper folder
+6. Copy libwebsockets's implementations to the proper folder
 ```
 $ sudo cp /usr/local/lib/libwebsockets* /usr/lib
 ```
 
-4. Execute the application
+7. Execute the application
 ```
 $ ./mouse-posyx
 ```
 
-5. Access the application throught IP:8000 in your favorite browser.
-6. Enjoy!
+8. Access the application throught IP:8000 in your favorite browser.
+9. Enjoy!
 
 </details>
 
@@ -64,7 +64,7 @@ $ ./mouse-posyx
 
 2. Clone this repository
 
-3. Build and install libwebsockets, you can read all the instructions here.
+3. Build and install libwebsockets
 
 4. In root folder, create a 'build' folder
 ```
@@ -85,13 +85,11 @@ $ ./mouse-posyx
  nmake
 ```
 
-7. Move libwebsockets.dll to 'build' folder.
+7. Execute the application
 
-8. Execute the application
+8. Access the application throught IP:8000 in your favorite browser.
 
-9. Access the application throught IP:8000 in your favorite browser.
-
-10. Enjoy!
+9. Enjoy!
 </details>
 
 ---
