@@ -16,14 +16,13 @@ add_executable(mouse-posyx ${SOURCE_FILES})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-if(UNIX)
+if(UNIX AND NOT APPLE)
   add_library(Keyboard STATIC library/keyboard_linux.c)
   add_library(Mouse STATIC library/mouse_linux.c)
 
   target_link_libraries(Mouse X11)
   target_link_libraries(Keyboard Xtst)
   target_link_libraries(Server websockets)
-
 
   add_definitions(-DLINUX)
   MESSAGE("Building for Linux")
@@ -51,6 +50,16 @@ if(WIN32)
 
   add_definitions(-DWINDOWS)
   MESSAGE("Building for Windows")
+endif()
+
+if(APPLE)
+  MESSAGE("Building for Mac OS X")
+  add_library(Keyboard STATIC library/keyboard_apple.c)
+  add_library(Mouse STATIC library/mouse_apple.c)
+
+  target_link_libraries(Server websockets)
+
+  add_definitions(-DAPPLE)
 endif()
 
 if(USE_SSL)
