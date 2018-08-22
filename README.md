@@ -9,7 +9,7 @@ and the browser and it is compatible for Windows and Linux.
 ---
 <details>
     <summary>
-- Building for Linux (Click to expand)
+Building for Linux (Click to expand)
     </summary>
 1. Clone this repository
 
@@ -58,7 +58,7 @@ $ ./mouse-posyx
 
 <details>
     <summary>
-- Building for Windows (Click to expand)
+Building for Windows (Click to expand)
     </summary>
 1. Install OpenSSL, cmake and Visual Studio
 
@@ -90,6 +90,44 @@ $ ./mouse-posyx
 8. Access the application throught IP:8000 in your favorite browser.
 
 9. Enjoy!
+</details>
+<details>
+    <summary>
+Building for MacOSX (Click to expand)
+    </summary>
+1. Clone this repository
+
+```
+ $ git clone https://github.com/eiguike/mouse-posyx.git
+```
+
+2. Initialize submodule folder and update it
+
+```
+ $ git submodule init; git submodule update
+```
+
+3. Build libwebsockets and install
+
+```
+ $ cd libwebsockets;mkdir build;cd build;cmake .. -DLWS_WITH_SSL=OFF -DLWS_WITHOUT_BUILTIN_SHA1=OFF;make; sudo make install;
+```
+4. In mouse-posyx's folders, execute the following commands to build:
+
+```
+ $ mkdir build; cd build
+ $ cmake ..
+ $ make
+```
+
+5. Execute the application
+```
+$ ./mouse-posyx
+```
+
+7. Access the application throught IP:8000 in your favorite browser.
+8. Enjoy!
+
 </details>
 
 ---
