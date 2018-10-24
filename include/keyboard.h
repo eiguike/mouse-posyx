@@ -23,7 +23,7 @@ enum Accent {
 
 typedef enum Accent ACCENT;
 
-#ifdef WINDOWS
+#if defined(WINDOWS) || defined(APPLE)
 typedef unsigned int KeySym;
 typedef unsigned int KeyCode;
 #endif
