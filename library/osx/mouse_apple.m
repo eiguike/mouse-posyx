@@ -1,6 +1,15 @@
 #include "server.h"
 #include "mouse.h"
 
+#include <Foundation/Foundation.h>
+#include <stdio.h>
+
+void hello_world(const char *msg)
+{
+  NSString * myString = @"Hello World";
+  NSLog(@"%@", myString);
+}
+
 void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
   printf("SetCurrentPositionApple begin...\n");
   return;
