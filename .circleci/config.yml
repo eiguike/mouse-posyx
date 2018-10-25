@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt install cmake zlib1g-dev libx11-dev libxtst-dev
+            sudo apt install cmake zlib1g-dev libx11-dev libxtst-dev libssl-dev
       - run:
           name: Initialize Git Submodule
           command: |
@@ -24,7 +24,7 @@ jobs:
             cmake ..
             make
             sudo make install
-            cd ...
+            cd ~/mouse-posyx
       - run:
           name: Build mouse-posyx
           command: |
