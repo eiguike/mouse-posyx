@@ -1,5 +1,7 @@
 # Mouse Posyx
 ---
+[![CircleCI](https://circleci.com/gh/eiguike/mouse-posyx/tree/master.svg?style=svg)](https://circleci.com/gh/eiguike/mouse-posyx/tree/master)
+
 Control your mouse and keyboard throught your browser's smartphone. [[video]](https://www.youtube.com/watch?v=foAUzgEAnbc)
 
 This application uses Websockets to create a connection between the host
