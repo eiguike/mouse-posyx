@@ -1,5 +1,7 @@
-#include "keyboard.h"
 #include <windows.h>
+
+#include "keyboard.h"
+#include "logger.h"
 
 #define NoSymbol 0
 
@@ -287,13 +289,13 @@ KeySym GetLetterFromAccent (char * Input, unsigned int * Return) {
 
   while (AccentLettersToLetter[Index].AccentLetters != NULL) {
     if (strstr(AccentLettersToLetter[Index].AccentLetters, Input) != NULL) {
-      printf("%s\n", AccentLettersToLetter[Index].AccentLetters);
+      Logger->Info("%s", AccentLettersToLetter[Index].AccentLetters);
       *Return = Index;
       return AccentLettersToLetter[Index].Letter;
     }
     Index++;
   }
-  printf("return NULL\n");
+  Logger->Info("return NULL");
   *Return = Index;
   return AccentLettersToLetter[Index].Letter;
 }
@@ -301,12 +303,12 @@ KeySym GetLetterFromAccent (char * Input, unsigned int * Return) {
 ACCENT GetAccent (char * Input) {
   unsigned int Index = 0;
 
-  printf("GetAccent Input = %s\n", Input);
+  Logger->Info("GetAccent Input = %s", Input);
 
   while(AccentLetters[Index].Letters != NULL) {
-    printf("%s %s\n", AccentLetters[Index].Letters, Input);
+    Logger->Info("%s %s", AccentLetters[Index].Letters, Input);
     if (strstr(AccentLetters[Index].Letters, Input) != NULL) {
-      printf("Accent returned: %d\n", AccentLetters[Index].Accent);
+      Logger->Info("Accent returned: %d", AccentLetters[Index].Accent);
       return AccentLetters[Index].Accent;
     }
     Index++;
@@ -319,10 +321,10 @@ void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
   unsigned int Index = 0;
   KeyCode Keycode;
   ACCENT Acc = GetAccent(Input);
-  printf("Accent: %s\n", AccentLetters[Acc].Type);
+  Logger->Info("Accent: %s", AccentLetters[Acc].Type);
 
   if (Acc == NOTHING) {
-    printf("I dont know how to interpret this...\n");
+    Logger->Info("I dont know how to interpret this...");
     return;
   }
 
@@ -330,7 +332,7 @@ void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
   memset(&InputCommand, 0, sizeof(InputCommand));
   InputCommand.type = INPUT_KEYBOARD;
   if (AccentLetters[Acc].Capitalized) {
-    printf("Accent capitalized, pressing shift...\n");
+    Logger->Info("Accent capitalized, pressing shift...");
     InputCommand.ki.wVk = 0x10; // shift
     InputCommand.ki.dwFlags = 0;
     SendInput(1, &InputCommand, sizeof(INPUT));
@@ -338,61 +340,61 @@ void TypeComplicatedLetter (KEYBOARD * this, char * Input) {
 
   InputCommand.ki.wVk = AccentLetters[Acc].Keysym;
   InputCommand.ki.dwFlags = 0;
-  printf("Pressing keycode: %d Acc %d\n", InputCommand.ki.wVk, Acc);
+  Logger->Info("Pressing keycode: %d Acc %d", InputCommand.ki.wVk, Acc);
   SendInput(1, &InputCommand, sizeof(INPUT));
   
 
   InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
-  printf("Releasing keycode: %d\n", InputCommand.ki.wVk);
+  Logger->Info("Releasing keycode: %d", InputCommand.ki.wVk);
   SendInput(1, &InputCommand, sizeof(INPUT));
 
   if (AccentLetters[Acc].Capitalized) {
-    printf("Releasing Shift\n");
+    Logger->Info("Releasing Shift");
     InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
     InputCommand.ki.wVk = 0x10; // shift
     SendInput(1, &InputCommand, sizeof(INPUT));
   }
 
   if (AccentLetters[Acc].Composed) {
-    printf("AccentLetters Composed == TRUE\n");
+    Logger->Info("AccentLetters Composed == TRUE");
     Keycode = GetLetterFromAccent (Input, &Index);
     if (Keycode != NoSymbol) {
       if (AccentLettersToLetter[Index].Capitalized) {
-        printf("Accent capitalized, pressing shift...\n");
+        Logger->Info("Accent capitalized, pressing shift...");
         InputCommand.ki.wVk = 0x10; // shift
         InputCommand.ki.dwFlags = 0;
         SendInput(1, &InputCommand, sizeof(INPUT));
       }
 
-      printf("Pressing Letter: %d\n", Keycode);
+      Logger->Info("Pressing Letter: %d", Keycode);
       InputCommand.ki.wVk = Keycode;
       InputCommand.ki.dwFlags = 0;
       SendInput(1, &InputCommand, sizeof(INPUT));
       InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
       SendInput(1, &InputCommand, sizeof(INPUT));
-      printf("Releasing Letter: %d\n", Keycode);
+      Logger->Info("Releasing Letter: %d", Keycode);
 
       if (AccentLettersToLetter[Index].Capitalized) {
         InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
         InputCommand.ki.wVk = 0x10; // shift
         SendInput(1, &InputCommand, sizeof(INPUT));
-        printf("Accent capitalized, releasing shift...\n");
+        Logger->Info("Accent capitalized, releasing shift...");
       }
     } else {
-      printf("I don't know how to handle this character %s\n", Input);
+      Logger->Info("I don't know how to handle this character %s", Input);
     }
   }
 
-  printf("Finish...\n");
+  Logger->Info("Finish...");
   return;
 }
 
 int IsLetterCapitalized(char * Input) {
   if (strlen(Input) == 1) {
-    printf("Letter received to compare %c\n", Input[0]);
-    printf("Input[0] >= A: %s\n", (Input[0] >= 'A' ? "True" : "False"));
-    printf("Input[0] <= Z: %s\n", (Input[0] <= 'Z' ? "True" : "False"));
-    printf("Value %d A: %d Z: %d\n", Input[0], 'A', 'Z');
+    Logger->Info("Letter received to compare %c", Input[0]);
+    Logger->Info("Input[0] >= A: %s", (Input[0] >= 'A' ? "True" : "False"));
+    Logger->Info("Input[0] <= Z: %s", (Input[0] <= 'Z' ? "True" : "False"));
+    Logger->Info("Value %d A: %d Z: %d", Input[0], 'A', 'Z');
 
     if (Input[0] >= 'A' && Input[0] <= 'Z') return 1;
     if (Input[0] >= '!' && Input[0] <= '+') {
@@ -499,8 +501,8 @@ KeySym LatinStringToKeysym(char * Input) {
 
 
 void TypeLetterWindows (KEYBOARD * this, char * Input) {
-  printf("TypeLetterWindows begin\n");
-  printf("Letter received: %s\n", Input);
+  Logger->Info("TypeLetterWindows begin");
+  Logger->Info("Letter received: %s", Input);
 
   // special treatment when @ is sent
   if (Input == NULL) {
@@ -517,20 +519,20 @@ void TypeLetterWindows (KEYBOARD * this, char * Input) {
     InputCommand.ki.wVk = 0x08;
   } else if (strcmp(Input, " ") == 0) {
     InputCommand.ki.wVk = 0x20;
-  } else if (strcmp(Input, "\n") == 0) {
+  } else if (strcmp(Input, "") == 0) {
     InputCommand.ki.wVk = 0x0D;
   } else if (strlen(Input) == 1) {
-  	printf("Value: %d\n", Input[0]);
+  	Logger->Info("Value: %d", Input[0]);
 
     if (IsLetterCapitalized (Input)) {
-      printf("Capitalized!!\n");
+      Logger->Info("Capitalized!!");
       InputCommand.ki.wVk = 0x10; //shift
       SendInput(1, &InputCommand, sizeof(INPUT));
     }
     InputCommand.ki.wVk = LatinStringToKeysym(Input);
 
     if (InputCommand.ki.wVk == NoSymbol) {
-      printf("I don't know how to interpret this command!\n");
+      Logger->Info("I don't know how to interpret this command!");
       goto RELEASE_SHIFT;
     }
   } else if (strlen(Input) > 1) {
@@ -547,7 +549,7 @@ RELEASE_SHIFT:
   InputCommand.ki.dwFlags = KEYEVENTF_KEYUP;
   SendInput(1, &InputCommand, sizeof(INPUT));
 FINISH:  
-  printf("TypeLetterWindows end\n");
+  Logger->Info("TypeLetterWindows end");
 }
 
 void ReleaseKeyboardWindows (KEYBOARD * this) {

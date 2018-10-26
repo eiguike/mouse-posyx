@@ -1,7 +1,8 @@
+#include <string.h>
+
+#include "logger.h"
 #include "server.h"
 #include "mouse.h"
-
-#include <string.h>
 
 extern MOUSE * gMouse;
 
@@ -33,7 +34,7 @@ void PositionParser (char * Input) {
   Position.X = atoi(Pointer);
   Pointer = strtok(NULL, "@");
   Position.Y = atoi(Pointer);
-  printf("X: %d Y: %d\n", Position.X, Position.Y);
+  Logger->Info("X: %d Y: %d", Position.X, Position.Y);
 
   // Parsing and set cursor position
   gMouse->SetCurrentPosition (gMouse, Position);
@@ -42,10 +43,10 @@ void PositionParser (char * Input) {
 void ClickParser (char * Input) {
   char * Pointer = NULL;
 
-  printf("ClickParser begin...\n");
-  printf("Input %s\n", Pointer);
+  Logger->Info("ClickParser begin...");
+  Logger->Info("Input %s", Pointer);
   Pointer = strtok(NULL, "@");
-  printf("Pointer %s\n", Pointer);
+  Logger->Info("Pointer %s", Pointer);
   gMouse->ClickEvent(gMouse, atoi(Pointer));
 }
 
@@ -63,7 +64,7 @@ int callback_mouse(struct lws *wsi,
                    size_t len) {
 	switch(reason) {
 		case LWS_CALLBACK_RECEIVE:
-      printf("Command: %s\n", in);
+      Logger->Info("Command: %s", in);
       char * Pointer = NULL;
       unsigned int Index = 0;
 
@@ -79,7 +80,7 @@ int callback_mouse(struct lws *wsi,
         Index++;
       }
 
-      printf("%s possible trash command\n",in);
+      Logger->Info("%s possible trash command",in);
 
 			//lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));
 			break;

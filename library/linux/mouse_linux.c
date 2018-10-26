@@ -1,9 +1,10 @@
-#include "server.h"
-#include "mouse.h"
-
 #include <X11/Xlib.h>
 #include <X11/extensions/XTest.h>
 #include <string.h>
+
+#include "server.h"
+#include "mouse.h"
+#include "logger.h"
 
 void SetCurrentPositionLinux (MOUSE * this, POSITION NewPosition) {
   XSelectInput(this->Display, this->Window, KeyReleaseMask);
@@ -26,15 +27,15 @@ POSITION GetCurrentPositionLinux (MOUSE * this) {
 }
 
 void ClickEventLinux (MOUSE * this, const int ButtonValue) {
-  printf("ClickEventLinux begin...\n");
-  printf("ButtonValue = %d\n", ButtonValue);
+  Logger->Info("ClickEventLinux begin...");
+  Logger->Info("ButtonValue = %d", ButtonValue);
   XTestFakeButtonEvent (this->Display, ButtonValue, 1, CurrentTime);
   XFlush(this->Display);
 }
 
 void ReleaseClickEventLinux (MOUSE * this, const int ButtonValue) {
-  printf("ReleaseClickEventLinux begin...\n");
-  printf("ButtonValue = %d\n", ButtonValue);
+  Logger->Info("ReleaseClickEventLinux begin...");
+  Logger->Info("ButtonValue = %d", ButtonValue);
   XTestFakeButtonEvent (this->Display, ButtonValue, 0, CurrentTime);
   XFlush(this->Display);
 }

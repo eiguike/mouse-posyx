@@ -1,6 +1,7 @@
 #include <libwebsockets.h>
 #include <string.h>
 
+#include "logger.h"
 #include "server.h"
 #include "protocols/http_protocol.h"
 
@@ -65,7 +66,7 @@ FAIL:
 
 
 SERVER * InitializeServerSSL(int Port) {
-  printf("Using SSL\n");
+  Logger->Info("Using SSL\n");
 
   int Options = 0;
   char cert_path[1024] = "./libwebsockets-test-server.pem";

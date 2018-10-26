@@ -1,8 +1,9 @@
-#include "server.h"
-#include "mouse.h"
-
 #include <Foundation/Foundation.h>
 #include <stdio.h>
+
+#include "server.h"
+#include "mouse.h"
+#include "logger.h"
 
 void hello_world(const char *msg)
 {
@@ -11,22 +12,22 @@ void hello_world(const char *msg)
 }
 
 void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
-  printf("SetCurrentPositionApple begin...\n");
+  Logger->Info("SetCurrentPositionApple begin...");
   return;
 }
 
 POSITION GetCurrentPositionApple (MOUSE * this) {
-  printf("GetCurrentPositionApple begin...\n");
-  printf("X: %d\nY: %d\n", this->Position.X, this->Position.Y);
+  Logger->Info("GetCurrentPositionApple begin...");
+  Logger->Info("X: %d\nY: %d\n", this->Position.X, this->Position.Y);
   return this->Position;
 }
 
 void ClickEventApple (MOUSE * this, const int Button) {
-  printf("ClickEventApple begin...\n");
+  Logger->Info("ClickEventApple begin...");
 }
 
 void ReleaseClickEventApple (MOUSE * this, const int Button) {
-  printf("ReleaseClickEventApple begin...\n");
+  Logger->Info("ReleaseClickEventApple begin...");
 }
 
 

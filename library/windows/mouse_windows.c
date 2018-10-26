@@ -1,20 +1,22 @@
-#include "server.h"
-#include "mouse.h"
 #include <windows.h>
 
+#include "server.h"
+#include "mouse.h"
+#include "logger.h"
+
 void SetCurrentPositionWindows (MOUSE * this, POSITION NewPosition) {
-  printf("SetCurrentPositionWindows begin...\n");
+  Logger->Info("SetCurrentPositionWindows begin...");
   POINT Pos;
 
   GetCursorPos(&Pos);
 
-  printf("Received: X: %d Y: %d\n", NewPosition.X, NewPosition.Y);
-  printf("Current: X: %d Y: %d\n", Pos.x, Pos.y);
+  Logger->Info("Received: X: %d Y: %d", NewPosition.X, NewPosition.Y);
+  Logger->Info("Current: X: %d Y: %d", Pos.x, Pos.y);
 
   Pos.x = Pos.x - NewPosition.X;
   Pos.y  = Pos.y - NewPosition.Y;
 
-  printf("New: X: %d Y: %d\n", Pos.x, Pos.y);
+  Logger->Info("New: X: %d Y: %d", Pos.x, Pos.y);
 
   SetCursorPos(Pos.x, Pos.y);
 
@@ -22,14 +24,14 @@ void SetCurrentPositionWindows (MOUSE * this, POSITION NewPosition) {
 }
 
 POSITION GetCurrentPositionWindows (MOUSE * this) {
-  printf("GetCurrentPositionWindows begin...\n");
-  printf("X: %d\nY: %d\n", this->Position.X, this->Position.Y);
+  Logger->Info("GetCurrentPositionWindows begin...");
+  Logger->Info("X: %d\nY: %d", this->Position.X, this->Position.Y);
 
   return this->Position;
 }
 
 void ClickEventWindows (MOUSE * this, const int Button) {
-  printf("ClickEventWindows begin...\n");
+  Logger->Info("ClickEventWindows begin...");
 
   INPUT Input={0};
 
@@ -46,7 +48,7 @@ void ClickEventWindows (MOUSE * this, const int Button) {
 }
 
 void ReleaseClickEventWindows (MOUSE * this, const int Button) {
-  printf("ReleaseClickEventWindows begin...\n");
+  Logger->Info("ReleaseClickEventWindows begin...");
   INPUT Input={0};
 
   memset(&Input, 0, sizeof(Input));

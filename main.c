@@ -5,10 +5,13 @@
 #include "keyboard.h"
 #include "server.h"
 
+#include "logger.h"
+
 MOUSE * gMouse = NULL;
 KEYBOARD * gKeyboard = NULL;
 
 int main() {
+  Logger_New();
   gMouse = InitializeMouseDevice ();
   gKeyboard = InitializeKeyboardDevice ();
 
@@ -19,4 +22,5 @@ int main() {
 #endif
 
   Server->Start(Server);
+  Logger->Dispose();
 }

@@ -1,10 +1,12 @@
-#include "keyboard.h"
 #include <string.h>
 
+#include "logger.h"
+#include "keyboard.h"
+
 void TypeLetterApple (KEYBOARD * this, char * Input) {
-  printf("TypeLetterApple begin\n");
-  printf("Letter received: %s\n", Input);
-  printf("TypeLetterApple end\n");
+  Logger->Info("TypeLetterApple begin");
+  Logger->Info("Letter received: %s", Input);
+  Logger->Info("TypeLetterApple end");
 }
 
 void ReleaseKeyboardApple (KEYBOARD * this) {

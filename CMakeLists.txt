@@ -7,6 +7,7 @@ add_library(ServerHTTP STATIC library/protocols/http_protocol.c)
 #add_library(ServerHTTP STATIC library/protocols/http_protocol_old.c)
 add_library(ServerMouse STATIC library/protocols/mouse_protocol.c)
 add_library(ServerKeyboard STATIC library/protocols/keyboard_protocol.c)
+add_library(Logger STATIC library/logger.c)
 
 include_directories("./include")
 
@@ -77,6 +78,7 @@ target_link_libraries(Server ServerKeyboard)
 target_link_libraries(mouse-posyx Server)
 target_link_libraries(mouse-posyx Mouse)
 target_link_libraries(mouse-posyx Keyboard)
+target_link_libraries(mouse-posyx Logger)
 
 install(TARGETS mouse-posyx DESTINATION /bin)
 

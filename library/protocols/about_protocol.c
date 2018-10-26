@@ -1,5 +1,6 @@
 #include "server.h"
 #include "protocols/about_protocol.h"
+#include "logger.h"
 
 #define APPLICATION_VERSION "mouse-posyx 1.0v"
 
@@ -14,7 +15,7 @@ int CallbackAbout( struct lws *wsi,
 {
   switch(reason) {
     case LWS_CALLBACK_SERVER_WRITEABLE:
-      printf("Sending message...\n");
+      Logger->Info("Sending message...");
       lws_write( wsi,
                  &received_payload.data[LWS_SEND_BUFFER_PRE_PADDING],
                  received_payload.len,

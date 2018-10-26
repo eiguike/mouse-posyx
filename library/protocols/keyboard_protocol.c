@@ -1,7 +1,8 @@
+#include <string.h>
+
+#include "logger.h"
 #include "server.h"
 #include "keyboard.h"
-
-#include <string.h>
 
 extern KEYBOARD * gKeyboard;
 
@@ -19,7 +20,7 @@ void WriteParser (char * Input) {
   char * Pointer = NULL;
 
   Pointer = strtok(NULL, "@");
-  printf("WriterParser: %s\n", Pointer);
+  Logger->Info("WriterParser: %s", Pointer);
 
   gKeyboard->TypeLetter (gKeyboard, Pointer);
 }
@@ -31,7 +32,7 @@ int KeyboardCallback (struct lws *wsi,
                       size_t len) {
 	switch(reason) {
 		case LWS_CALLBACK_RECEIVE:
-      printf("Command: %s\n", in);
+      Logger->Info("Command: %s", in);
       char * Pointer = NULL;
       unsigned int Index = 0;
 
@@ -47,7 +48,7 @@ int KeyboardCallback (struct lws *wsi,
         Index++;
       }
 
-      printf("%s possible trash command\n",in);
+      Logger->Info("%s possible trash command",in);
 
 			//lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));
 			break;
