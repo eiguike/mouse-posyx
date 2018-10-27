@@ -26,18 +26,17 @@ struct payload {
 } Message;
 
 typedef struct WEBSOCKET_SERVER {
-  struct lws_protocols * Protocols;
   struct lws_context_creation_info * ContextInfo;
   struct lws_context * Context;
-  unsigned int NumbersOfProtocols;
   short int IsStop;
 
   int (*Start)(struct WEBSOCKET_SERVER * this);
   int (*Stop)(struct WEBSOCKET_SERVER * this);
+  void (*Dispose)(struct WEBSOCKET_SERVER ** this);
 } SERVER;
 
 int Start (SERVER * this);
-int Stop (SERVER * this);
+int Stop (SERVER* this);
 SERVER * InitializeServer(int Port);
 SERVER * InitializeServerSSL(int Port);
 

@@ -30,8 +30,8 @@ void Logger_Info (const char* Format, ...) {
   return;
 }
 
-void Logger_Error (const char* Format, ...) {
-  printf("ERROR: ");
+void Logger_Error (const char* Function, int Line, const char* Format, ...) {
+  printf("ERROR %s.c:%d: ", Function, Line);
 
   va_list arg;
   va_start (arg, Format);
