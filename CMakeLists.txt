@@ -18,8 +18,8 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(UNIX AND NOT APPLE)
-  add_library(Keyboard STATIC library/linux/keyboard_linux.c)
-  add_library(Mouse STATIC library/linux/mouse_linux.c)
+  add_library(Keyboard STATIC library/linux/keyboard.c)
+  add_library(Mouse STATIC library/linux/mouse.c)
 
   target_link_libraries(Mouse X11)
   target_link_libraries(Keyboard Xtst)
@@ -30,8 +30,8 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if(WIN32)
-  add_library(Keyboard STATIC library/windows/keyboard_windows.c)
-  add_library(Mouse STATIC library/windows/mouse_windows.c)
+  add_library(Keyboard STATIC library/windows/keyboard.c)
+  add_library(Mouse STATIC library/windows/mouse.c)
 
   include_directories("./libwebsockets/build")
   include_directories("./libwebsockets/lib")
@@ -56,8 +56,8 @@ endif()
 if(APPLE)
   SET(CMAKE_EXE_LINKER_FLAGS "-framework Foundation -w")
   MESSAGE("Building for Mac OS X")
-  add_library(Keyboard STATIC library/osx/keyboard_apple.c)
-  add_library(Mouse STATIC library/osx/mouse_apple.m)
+  add_library(Keyboard STATIC library/osx/keyboard.c)
+  add_library(Mouse STATIC library/osx/mouse.m)
 
   target_link_libraries(Server websockets)
 
