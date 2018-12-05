@@ -5,7 +5,7 @@
 Control your mouse and keyboard throught your browser's smartphone. [[video]](https://www.youtube.com/watch?v=foAUzgEAnbc)
 
 This application uses Websockets to create a connection between the host
-and the browser and it is compatible for Windows and Linux.
+and the browser and it is compatible for Windows and Linux (WIP for OSX).
 
 ### Build instructions:
 ---
