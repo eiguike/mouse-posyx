@@ -9,6 +9,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            sudo apt update
             sudo apt install cmake zlib1g-dev libx11-dev libxtst-dev libssl-dev
       - run:
           name: Initialize Git Submodule
