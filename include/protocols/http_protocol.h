@@ -40,6 +40,10 @@
 
 #include "libwebsockets.h"
 
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+#endif
+
 #ifdef _WIN32
 #include <io.h>
 #include "gettimeofday.h"
