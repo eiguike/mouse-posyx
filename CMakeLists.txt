@@ -11,6 +11,11 @@ add_library(Logger STATIC library/logger.c)
 
 include_directories("./include")
 
+if(APPLE)
+  link_directories("/usr/local/lib")
+  include_directories("/usr/local/include")
+endif()
+
 set(SOURCE_FILES main.c)
 add_executable(mouse-posyx ${SOURCE_FILES})
 
