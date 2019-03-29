@@ -59,10 +59,10 @@ if(WIN32)
 endif()
 
 if(APPLE)
-  SET(CMAKE_EXE_LINKER_FLAGS "-framework Foundation -w")
+  SET(CMAKE_EXE_LINKER_FLAGS "-framework ApplicationServices -w")
   MESSAGE("Building for Mac OS X")
   add_library(Keyboard STATIC library/osx/keyboard.c)
-  add_library(Mouse STATIC library/osx/mouse.m)
+  add_library(Mouse STATIC library/osx/mouse.c)
 
   target_link_libraries(Server websockets)
 

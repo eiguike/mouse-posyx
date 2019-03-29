@@ -4,10 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __APPLE__
-void hello_world(const char *msg);
-#endif
-
 #ifdef LINUX
 #include <X11/Xlib.h>
 

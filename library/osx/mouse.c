@@ -1,18 +1,27 @@
-#include <Foundation/Foundation.h>
+#include <ApplicationServices/ApplicationServices.h>
+#include <unistd.h>
+
 #include <stdio.h>
 
 #include "server.h"
 #include "mouse.h"
 #include "logger.h"
 
-void hello_world(const char *msg)
-{
-  NSString * myString = @"Hello World";
-  NSLog(@"%@", myString);
-}
-
 void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
   Logger->Info("SetCurrentPositionApple begin...");
+  
+  CGEventRef MoveMouse = CGEventCreateMouseEvent(NULL,
+                                      kCGEventMouseMoved,
+                                      CGPointMake(NewPosition.X, NewPosition.Y),
+                                      kCGMouseButtonLeft);
+
+  CGEventPost(kCGHIDEventTap, MoveMouse);
+
+  this->Position.X = NewPosition.X;
+  this->Position.Y = NewPosition.Y;
+
+  CFRelease(MoveMouse);
+
   return;
 }
 
