@@ -99,21 +99,21 @@ function mouse_intialize_events() {
 function mouse_initialize_track_pointer() {
   MOUSE_SOCKET.events.gyroscope_button = document.querySelector(".gyroscope-button");
 
-  MOUSE_SOCKET.events.touchpad.addEventListener("touchstart", mouse_touch_track_pointer_start, false);
-  MOUSE_SOCKET.events.touchpad.addEventListener("touchend", mouse_touch_track_pointer_end, false);
+  MOUSE_SOCKET.events.gyroscope_button.addEventListener("touchstart", mouse_touch_track_pointer_start, false);
+  MOUSE_SOCKET.events.gyroscope_button.addEventListener("touchend", mouse_touch_track_pointer_end, false);
 }
 
 function mouse_touch_track_pointer_start() {
-  window.addEventListener('deviceorientation', mouse_touch_track_pointer_move);
+  window.addEventListener('deviceorientation', mouse_touch_track_pointer_move, true);
 }
 
 function mouse_touch_track_pointer_end() {
-  window.removeEventListener("deviceorientation", mouse_touch_track_pointer_move, false);
+  window.removeEventListener("deviceorientation", mouse_touch_track_pointer_move, true);
 }
 
 function mouse_touch_track_pointer_move(event) {
-  var maxX = 5;
-  var maxY = 2.5;
+  var maxX = 2;
+  var maxY = 1;
   var x = event.beta;
   var y = event.gamma;
 
