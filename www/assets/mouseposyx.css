@@ -30,14 +30,14 @@ html, body {
   height: 100%;
 }
 
-.giroscope-button-bg {
+.gyroscope-button-bg {
   background-color: gray;
   height: auto;
   text-align: center;
   padding: 5px;
 }
 
-.giroscope-button {
+.gyroscope-button {
   color: transparent;
   height: 90px;
   width: 90px;
@@ -50,7 +50,6 @@ html, body {
 
 }
 
-.giroscope-button:active{
+.gyroscope-button:active{
   background-color: #DC143C;
-
 }

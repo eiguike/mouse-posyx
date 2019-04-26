@@ -10,31 +10,29 @@ var MouseSocket = function() {
   }
 }
 
-var maxX = 5;
-var maxY = 2.5;
-
-function handleOrientation(event) {
-  var x = event.beta;  // In degree in the range [-180,180]
-  var y = event.gamma; // In degree in the range [-90,90]
-
-  if (x >  maxX) { x =  maxX};
-  if (x < -maxX) { x = -maxX};
-
-  //x += 90;
-  //y += 90;
-
-  command = "MOVE@"+ Math.floor(-y) + "@" + Math.floor(x);
-  MOUSE_SOCKET.socket.send(command);
-}
-
 // Touchpad code
 function mouse_touch_start(e) {
+  MOUSE_SOCKET.last_action = "";
+  e.target.addEventListener("touchmove", mouse_touch_move, false);
+
+  MOUSE_SOCKET.position.initial_x = e.targetTouches[0].clientX;
+  MOUSE_SOCKET.position.initial_y = e.targetTouches[0].clientY;
+
   MOUSE_SOCKET.timer = new Date().getTime();
-  window.addEventListener('deviceorientation', handleOrientation);
 }
 
 function mouse_touch_end(e) {
-  window.removeEventListener("deviceorientation", handleOrientation, false);
+  e.target.removeEventListener("touchmove", mouse_touch_move, false);
+  MOUSE_SOCKET.position.initial_x = 0;
+  MOUSE_SOCKET.position.initial_y = 0;
+
+  if (MOUSE_SOCKET.last_action === "") {
+    var actual_timer = new Date();
+    if (actual_timer.getTime() - MOUSE_SOCKET.timer < 500) {
+      mouse_click_left(e);  
+      mouse_release_left(e);  
+    }
+  }
 }
 
 function mouse_touch_move(e) {
@@ -90,16 +88,46 @@ function mouse_intialize_events() {
   MOUSE_SOCKET.events.touchpad.addEventListener("touchstart", mouse_touch_start, false);
   MOUSE_SOCKET.events.touchpad.addEventListener("touchend", mouse_touch_end, false);
 
-  //MOUSE_SOCKET.events.left_button.addEventListener("touchstart", mouse_click_left, false);
-  //MOUSE_SOCKET.events.left_button.addEventListener("touchend", mouse_release_left, false);
+  MOUSE_SOCKET.events.left_button.addEventListener("touchstart", mouse_click_left, false);
+  MOUSE_SOCKET.events.left_button.addEventListener("touchend", mouse_release_left, false);
+  
+  MOUSE_SOCKET.events.right_button.addEventListener("touchstart", mouse_click_right, false);
+  MOUSE_SOCKET.events.right_button.addEventListener("touchend", mouse_release_right, false);
+}
 
-  //MOUSE_SOCKET.events.right_button.addEventListener("touchstart", mouse_click_right, false);
-  //MOUSE_SOCKET.events.right_button.addEventListener("touchend", mouse_release_right, false);
+// Gyroscope Pointer
+function mouse_initialize_track_pointer() {
+  MOUSE_SOCKET.events.gyroscope_button = document.querySelector(".gyroscope-button");
+
+  MOUSE_SOCKET.events.touchpad.addEventListener("touchstart", mouse_touch_track_pointer_start, false);
+  MOUSE_SOCKET.events.touchpad.addEventListener("touchend", mouse_touch_track_pointer_end, false);
+}
+
+function mouse_touch_track_pointer_start() {
+  window.addEventListener('deviceorientation', mouse_touch_track_pointer_move);
+}
+
+function mouse_touch_track_pointer_end() {
+  window.removeEventListener("deviceorientation", mouse_touch_track_pointer_move, false);
+}
+
+function mouse_touch_track_pointer_move(event) {
+  var maxX = 5;
+  var maxY = 2.5;
+  var x = event.beta;
+  var y = event.gamma;
+
+  if (x >  maxX) { x =  maxX};
+  if (x < -maxX) { x = -maxX};
+
+  command = "MOVE@"+ Math.floor(-y) + "@" + Math.floor(x);
+  MOUSE_SOCKET.socket.send(command);
 }
 
 function mouse_start() {
   mouse_initialize_socket();
   mouse_intialize_events();
+  mouse_initialize_track_pointer();
 }
 
 function mouse_stress_test() {
