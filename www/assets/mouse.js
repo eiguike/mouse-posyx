@@ -2,7 +2,7 @@ var MouseSocket = function() {
   return {
     position: { initial_x: 0, initial_y: 0 },
     sensitivity: 3,
-    last_action: "",
+    last_action: "START_TOUCH",
     timer: new Date(),
     events: {},
 //    stress: mouse_stress_test,
@@ -90,14 +90,44 @@ function mouse_intialize_events() {
 
   MOUSE_SOCKET.events.left_button.addEventListener("touchstart", mouse_click_left, false);
   MOUSE_SOCKET.events.left_button.addEventListener("touchend", mouse_release_left, false);
-
+  
   MOUSE_SOCKET.events.right_button.addEventListener("touchstart", mouse_click_right, false);
   MOUSE_SOCKET.events.right_button.addEventListener("touchend", mouse_release_right, false);
+}
+
+// Gyroscope Pointer
+function mouse_initialize_track_pointer() {
+  MOUSE_SOCKET.events.gyroscope_button = document.querySelector(".gyroscope-button");
+
+  MOUSE_SOCKET.events.gyroscope_button.addEventListener("touchstart", mouse_touch_track_pointer_start, false);
+  MOUSE_SOCKET.events.gyroscope_button.addEventListener("touchend", mouse_touch_track_pointer_end, false);
+}
+
+function mouse_touch_track_pointer_start() {
+  window.addEventListener('deviceorientation', mouse_touch_track_pointer_move, true);
+}
+
+function mouse_touch_track_pointer_end() {
+  window.removeEventListener("deviceorientation", mouse_touch_track_pointer_move, true);
+}
+
+function mouse_touch_track_pointer_move(event) {
+  var maxX = 2;
+  var maxY = 1;
+  var x = event.beta;
+  var y = event.gamma;
+
+  if (x >  maxX) { x =  maxX};
+  if (x < -maxX) { x = -maxX};
+
+  command = "MOVE@"+ Math.floor(-y) + "@" + Math.floor(x);
+  MOUSE_SOCKET.socket.send(command);
 }
 
 function mouse_start() {
   mouse_initialize_socket();
   mouse_intialize_events();
+  mouse_initialize_track_pointer();
 }
 
 function mouse_stress_test() {

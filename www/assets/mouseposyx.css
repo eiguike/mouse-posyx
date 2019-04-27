@@ -29,3 +29,27 @@ html, body {
 .mouse-class {
   height: 100%;
 }
+
+.gyroscope-button-bg {
+  background-color: gray;
+  height: auto;
+  text-align: center;
+  padding: 5px;
+}
+
+.gyroscope-button {
+  color: transparent;
+  height: 90px;
+  width: 90px;
+  border-width: 4px;
+  background-color: white;
+  border-color: black;
+  text-align: center;
+  align-content: center;
+  border-radius: 100px;
+
+}
+
+.gyroscope-button:active{
+  background-color: #DC143C;
+}
