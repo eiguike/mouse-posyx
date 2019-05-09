@@ -6,65 +6,82 @@
 
 LOGGER* Logger = NULL;
 
+static OUTPUT pOutput = STDOUT;
+static FILE* pFileBuffer = NULL;
+
 void Logger_Debug (const char* Format, ...) {
-  printf("DEBUG: ");
+  fprintf(pFileBuffer, "DEBUG: ");
 
   va_list arg;
   va_start (arg, Format);
-  vfprintf (stdout, Format, arg);
+  vfprintf (pFileBuffer, Format, arg);
   va_end (arg);
 
-  printf("\n");
+  fprintf(pFileBuffer, "\n");
   return;
 }
 
 void Logger_Info (const char* Format, ...) {
-  printf("INFO: ");
+  fprintf(pFileBuffer, "INFO: ");
 
   va_list arg;
   va_start (arg, Format);
-  vfprintf (stdout, Format, arg);
+  vfprintf (pFileBuffer, Format, arg);
   va_end (arg);
 
-  printf("\n");
+  fprintf(pFileBuffer, "\n");
   return;
 }
 
 void Logger_Error (const char* Function, int Line, const char* Format, ...) {
-  printf("ERROR %s.c:%d: ", Function, Line);
+  fprintf(pFileBuffer, "ERROR %s.c:%d: ", Function, Line);
 
   va_list arg;
   va_start (arg, Format);
-  vfprintf (stdout, Format, arg);
+  vfprintf (pFileBuffer, Format, arg);
   va_end (arg);
 
-  printf("\n");
+  fprintf(pFileBuffer, "\n");
 }
 
 void Logger_Warning (const char* Format, ...) {
-  printf("WARNING: ");
+  fprintf(pFileBuffer, "WARNING: ");
 
   va_list arg;
   va_start (arg, Format);
-  vfprintf (stdout, Format, arg);
+  vfprintf (pFileBuffer, Format, arg);
   va_end (arg);
 
-  printf("\n");
+  fprintf(pFileBuffer, "\n");
 }
 
 void Logger_Dispose() {
   if (Logger != NULL) {
     free(Logger);
     Logger = NULL;
+
+    if (pOutput == BINARY_FILE) {
+      fclose(pFileBuffer);
+      pFileBuffer = NULL;
+    }
   }
 }
 
-int Logger_New() {
+int Logger_New(OUTPUT Output, ...) {
   int Status = 0;
 
   if (Logger != NULL) {
     Logger->Warning("You are trying to allocate Logger Library again!");
     goto FINISH;
+  }
+
+  if (Output == BINARY_FILE) {
+    va_list arg;
+    va_start (arg, Output);
+    pFileBuffer = fopen(va_arg(arg, char*), "a+");
+    va_end (arg);
+  } else {
+    pFileBuffer = stdout;
   }
 
   Logger = calloc(1, sizeof(LOGGER));

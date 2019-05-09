@@ -1,6 +1,11 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+typedef enum OutputType {
+  STDOUT,
+  BINARY_FILE
+} OUTPUT;
+
 typedef struct LOGGER_STRUCTURE {
   void (*Dispose) ();
   void (*Info) (const char* Format, ...);
@@ -9,7 +14,7 @@ typedef struct LOGGER_STRUCTURE {
   void (*Warning) (const char* Format, ...);
 } LOGGER;
 
-int Logger_New();
+int Logger_New(OUTPUT Output, ...);
 
 extern LOGGER* Logger;
 #endif
