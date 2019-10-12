@@ -6,6 +6,7 @@
 #include "protocols/http_protocol.h"
 #include "protocols/mouse_protocol.h"
 #include "protocols/keyboard_protocol.h"
+#include "protocols/about_protocol.h"
 
 #define EXAMPLE_RX_BUFFER_BYTES (50)
 

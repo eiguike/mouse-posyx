@@ -11,7 +11,7 @@ struct lws_protocols protocols[] =
   {
     "http-protocol",
 		callback_http,
-		sizeof (per_session_data__http),
+		sizeof(per_session_data__http),
 		0,
   },
   {
@@ -23,6 +23,12 @@ struct lws_protocols protocols[] =
   {
     "keyboard-protocol",
     KeyboardCallback,
+    0,
+    EXAMPLE_RX_BUFFER_BYTES,
+  },
+  {
+    "about-protocol",
+    CallbackAbout,
     0,
     EXAMPLE_RX_BUFFER_BYTES,
   },
