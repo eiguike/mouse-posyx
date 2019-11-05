@@ -12,7 +12,7 @@ MOUSE * gMouse = NULL;
 KEYBOARD * gKeyboard = NULL;
 static SERVER * Server = NULL;
 
-int StopSignalHandler(int Signal);
+void StopSignalHandler(int Signal);
 
 int main() {
   Logger_New();
@@ -41,6 +41,6 @@ FINISH:
   return 0;
 }
 
-int StopSignalHandler(int Signal) {
+void StopSignalHandler(int Signal) {
   Server->Stop(Server);
 }

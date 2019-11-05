@@ -51,7 +51,7 @@ void Dispose(SERVER** This) {
 }
 
 int Start(SERVER * this) {
-  lws_service(this->Context, 1000000);
+  return lws_service(this->Context, 1000000);
 }
 
 int Stop(SERVER * this) {
