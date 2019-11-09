@@ -168,3 +168,31 @@ FAIL:
   return NULL;
 }
 
+void DoNothing(char* Command) {
+  return;
+}
+
+void (*IterateCommandMapping)(
+    COMMAND_MAPPING * CommandFunctionList,
+    char * Command
+    )
+{
+	void (*CommandFunction)() = DoNothing;
+  unsigned int Index = 0;
+
+  if (CommandFunctionList == NULL)) {
+    Logger->Error(__FUNCTION__, __LINE__, "CommandFunctionList is null!");
+    goto FINISH;
+  }
+
+  while(CommandFuncitonList[Index].Command != NULL) {
+    if (strcmp(Command, CommandFuncitonList[Index].Command) == 0) {
+      CommandFunction = CommandFuncitonList[Index].ExecuteCommand;
+    }
+    Index++;
+  }
+
+FINISH:
+  return CommandFunction;
+}
+

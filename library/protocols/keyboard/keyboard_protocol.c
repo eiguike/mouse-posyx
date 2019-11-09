@@ -34,20 +34,12 @@ int KeyboardCallback (struct lws *wsi,
 		case LWS_CALLBACK_RECEIVE:
       Logger->Info("Command: %s", in);
       char * Pointer = NULL;
-      unsigned int Index = 0;
 
 			memcpy(&Message.data[LWS_SEND_BUFFER_PRE_PADDING], in, len);
 			Message.len = len;
 
       Pointer = strtok(in, "@");
-      while(CommandMapping[Index].Command != NULL) {
-        if (strcmp(Pointer, CommandMapping[Index].Command) == 0) {
-          CommandMapping[Index].ExecuteCommand(Pointer);
-          goto FINISH;
-        }
-        Index++;
-      }
-
+      IterateCommandMapping(CommandMapping, Pointer)(Pointer)
       Logger->Info("%s possible trash command",in);
 
 			//lws_callback_on_writable_all_protocol(lws_get_context(wsi),lws_get_protocol(wsi));

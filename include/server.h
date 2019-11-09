@@ -41,4 +41,6 @@ int Stop (SERVER* this);
 SERVER * InitializeServer(int Port);
 SERVER * InitializeServerSSL(int Port);
 
+void (*IterateCommandMapping(COMMAND_MAPPING * CommandFunctionList, char * Command))(void);
+
 #endif
