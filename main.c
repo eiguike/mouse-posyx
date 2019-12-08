@@ -15,7 +15,7 @@ static SERVER * Server = NULL;
 int StopSignalHandler(int Signal);
 
 int main() {
-  Logger_New(BINARY_FILE, "mouse-posyx.log");
+  Logger_New(STDOUT);
   gMouse = InitializeMouseDevice ();
   gKeyboard = InitializeKeyboardDevice ();
 

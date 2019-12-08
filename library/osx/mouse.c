@@ -9,16 +9,19 @@
 
 void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
   Logger->Info("SetCurrentPositionApple begin...");
-  
+
+  this->GetCurrentPosition(this);
+
+  this->Position.X -= NewPosition.X;
+  this->Position.Y -= NewPosition.Y;
+
   CGEventRef MoveMouse = CGEventCreateMouseEvent(NULL,
                                       kCGEventMouseMoved,
-                                      CGPointMake(NewPosition.X, NewPosition.Y),
+                                      CGPointMake(this->Position.X, this->Position.Y),
                                       kCGMouseButtonLeft);
 
   CGEventPost(kCGHIDEventTap, MoveMouse);
 
-  this->Position.X = NewPosition.X;
-  this->Position.Y = NewPosition.Y;
 
   CFRelease(MoveMouse);
 
@@ -27,6 +30,15 @@ void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
 
 POSITION GetCurrentPositionApple (MOUSE * this) {
   Logger->Info("GetCurrentPositionApple begin...");
+
+  CGEventRef Event = CGEventCreate(nil);
+  CGPoint Localization = CGEventGetLocation(Event);
+
+  this->Position.X = Localization.x;
+  this->Position.Y = Localization.y;
+
+  CFRelease(Event);
+
   Logger->Info("X: %d\nY: %d\n", this->Position.X, this->Position.Y);
   return this->Position;
 }
