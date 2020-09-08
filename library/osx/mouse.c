@@ -7,6 +7,13 @@
 #include "mouse.h"
 #include "logger.h"
 
+typedef enum MouseClickType {
+  MOUSE_CLICK_TYPE_LEFT_BUTTON = 1,
+  MOUSE_CLICK_TYPE_RIGHT_BUTTON = 3
+};
+
+void sendEventOsx(MOUSE *this, CGEventType mouseEventTypeConstant);
+
 void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
   Logger->Info("SetCurrentPositionApple begin...");
 
@@ -15,15 +22,7 @@ void SetCurrentPositionApple (MOUSE * this, POSITION NewPosition) {
   this->Position.X -= NewPosition.X;
   this->Position.Y -= NewPosition.Y;
 
-  CGEventRef MoveMouse = CGEventCreateMouseEvent(NULL,
-                                      kCGEventMouseMoved,
-                                      CGPointMake(this->Position.X, this->Position.Y),
-                                      kCGMouseButtonLeft);
-
-  CGEventPost(kCGHIDEventTap, MoveMouse);
-
-
-  CFRelease(MoveMouse);
+  sendEventOsx(this, kCGEventMouseMoved);
 
   return;
 }
@@ -43,12 +42,24 @@ POSITION GetCurrentPositionApple (MOUSE * this) {
   return this->Position;
 }
 
-void ClickEventApple (MOUSE * this, const int Button) {
-  Logger->Info("ClickEventApple begin...");
+void ClickEventApple (MOUSE * this, enum MouseClickType Button) {
+  Logger->Info("ClickEventApple Button %d", Button);
+
+  CGEventType mouseEventTypeConstant =
+    Button == MOUSE_CLICK_TYPE_LEFT_BUTTON ?
+      kCGEventLeftMouseDown : kCGEventRightMouseDown;
+
+  sendEventOsx(this, mouseEventTypeConstant);
 }
 
-void ReleaseClickEventApple (MOUSE * this, const int Button) {
-  Logger->Info("ReleaseClickEventApple begin...");
+void ReleaseClickEventApple (MOUSE * this, enum MouseClickType Button) {
+  Logger->Info("ReleaseClickEventApple Button %d", Button);
+
+  CGEventType mouseEventTypeConstant =
+    Button == MOUSE_CLICK_TYPE_RIGHT_BUTTON ?
+      kCGEventLeftMouseUp : kCGEventRightMouseUp;
+
+  sendEventOsx(this, mouseEventTypeConstant);
 }
 
 
@@ -66,4 +77,21 @@ MOUSE * InitializeMouseDevice () {
 
 FINISH:
   return Mouse;
+}
+
+void sendEventOsx(MOUSE *this, CGEventType mouseEventTypeConstant) {
+  CGEventRef mouseEvent = CGEventCreateMouseEvent(
+      NULL,
+      mouseEventTypeConstant,
+      CGPointMake(this->Position.X, this->Position.Y),
+      kCGMouseButtonLeft
+  );
+
+  if (mouseEvent == NULL) {
+    Logger->Info("MoveMouse is null");
+    return;
+  }
+
+  CGEventPost(kCGHIDEventTap, mouseEvent);
+  CFRelease(mouseEvent);
 }

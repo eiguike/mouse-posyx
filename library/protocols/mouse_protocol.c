@@ -42,11 +42,12 @@ void PositionParser (char * Input) {
 
 void ClickParser (char * Input) {
   char * Pointer = NULL;
-
   Logger->Info("ClickParser begin...");
   Logger->Info("Input %s", Pointer);
   Pointer = strtok(NULL, "@");
   Logger->Info("Pointer %s", Pointer);
+
+  // TODO: Make atoi(Pointer) readable
   gMouse->ClickEvent(gMouse, atoi(Pointer));
 }
 
@@ -57,12 +58,14 @@ void ReleaseClickParser (char * Input) {
   gMouse->ReleaseClickEvent(gMouse, atoi(Pointer));
 }
 
-int callback_mouse(struct lws *wsi,
-                   enum lws_callback_reasons reason, 
-                   void *user, 
-                   void *in, 
-                   size_t len) {
-	switch(reason) {
+int callback_mouse (
+    struct lws *wsi,
+    enum lws_callback_reasons reason, 
+    void *user, 
+    void *in, 
+    size_t len
+) {
+  switch(reason) {
 		case LWS_CALLBACK_RECEIVE:
       Logger->Info("Command: %s", in);
       char * Pointer = NULL;
